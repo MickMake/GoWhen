@@ -1,0 +1,74 @@
+stages:
+#  - compile
+  - build
+  - release
+  - cleanup
+
+variables:
+  CONTAINER_TEST_IMAGE: asia.gcr.io/mickmake-dev/docker/gowhen/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHORT_SHA
+  CONTAINER_RELEASE_IMAGE: asia.gcr.io/mickmake-dev/docker/gowhen:latest
+  GO_REPO_TOKEN: $GO_REPO_TOKEN
+  TEMPLATE_GIT_REPO: $TEMPLATE_GIT_REPO
+  TEMPLATE_GIT_DIR: $TEMPLATE_GIT_DIR
+  TZ: $TZ
+
+# Use this to build the app from Gitlab CI.
+#compile:
+#  stage: compile
+#  image:
+#    name: gcr.io/kaniko-project/executor:debug
+#    entrypoint: [""]
+#  script:
+#  # This relies on GOOGLE_APPLICATION_CREDENTIALS being set and pointing to the Google Service Account JSON file
+#    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CONTAINER_TEST_IMAGE --cache=true --build-arg "GO_REPO_TOKEN=${GO_REPO_TOKEN}" --build-arg "TEMPLATE_GIT_REPO=${TEMPLATE_GIT_REPO}" --build-arg "TEMPLATE_GIT_DIR=${TEMPLATE_GIT_DIR}" --build-arg "TZ=${TZ}"
+#  #  only:
+#  #    - master
+#  rules:
+#    - changes:
+#        - defaults/const.json
+#        - Dockerfile*
+
+build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    # This relies on GOOGLE_APPLICATION_CREDENTIALS being set and pointing to the Google Service Account JSON file
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CONTAINER_TEST_IMAGE --cache=true --build-arg "GO_REPO_TOKEN=${GO_REPO_TOKEN}" --build-arg "TEMPLATE_CF_TOKEN=${TEMPLATE_CF_TOKEN}" --build-arg "TEMPLATE_GIT_REPO=${TEMPLATE_GIT_REPO}" --build-arg "TEMPLATE_GIT_DIR=${TEMPLATE_GIT_DIR}" --build-arg "TZ=${TZ}"
+  #  only:
+  #    - master
+  rules:
+    - changes:
+        # defaults/const.json
+        - Dockerfile*
+        - dist/checksums.txt
+
+release-image-master:
+  stage: release
+  needs:
+    - build
+  image:
+    name: gcr.io/go-containerregistry/gcrane:debug
+    entrypoint: [""]
+  # This relies on GOOGLE_APPLICATION_CREDENTIALS being set and pointing to the Google Service Account JSON file
+  script:
+    - gcrane cp $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+  variables:
+    GIT_STRATEGY: none
+#  only:
+#    - master
+  rules:
+    - changes:
+        # defaults/const.json
+        - Dockerfile*
+        - dist/checksums.txt
+
+#cleanup_temp_tag:
+#  stage: cleanup
+#  image: google/cloud-sdk
+#  when: always
+#  script:
+#    # This relies on GOOGLE_APPLICATION_CREDENTIALS being set and pointing to the Google Service Account JSON file
+#    # Untag the test image we created (but don't delete, as it's likely to be tagged with a latest tag too)
+#    - gcloud container images untag $CONTAINER_TEST_IMAGE
