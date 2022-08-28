@@ -16,6 +16,7 @@ type Cmds struct {
 	Format   *CmdFormat
 	Timezone *CmdTimezone
 	Round    *CmdRound
+	Is       *CmdIs
 
 	Data  Data
 	Error error
@@ -39,6 +40,42 @@ func (d *Data) SetDuration(t time.Duration) {
 	d.Duration = &t
 }
 
+func (d *Data) Clear() {
+	d.Date = nil
+	d.Duration = nil
+}
+
+func (d *Data) IsWeekend() bool {
+	if d.Date == nil {
+		return false
+	}
+	switch d.Date.Weekday() {
+		case time.Sunday:
+			return true
+		case time.Saturday:
+			return true
+	}
+	return false
+}
+
+func (d *Data) IsWeekday() bool {
+	return !d.IsWeekend()
+}
+
+func (d *Data) IsLeap() bool {
+	if d.Date == nil {
+		return false
+	}
+	year := d.Date.Year()
+	return year%4 == 0 && (year%100 != 0 || year%400 == 0)
+}
+
+func (d *Data) IsDST() bool {
+	if d.Date == nil {
+		return false
+	}
+	return d.Date.IsDST()
+}
 
 func init() {
 	for range Only.Once {
@@ -71,6 +108,9 @@ func init() {
 
 		cmds.Round = NewCmdRound()
 		cmds.Round.AttachCommand(cmdRoot)
+
+		cmds.Is = NewCmdIs()
+		cmds.Is.AttachCommand(cmdRoot)
 
 		// cmds.Google = NewCmdGoogle()
 		// cmds.Google.AttachCommands(cmdRoot)

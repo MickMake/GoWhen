@@ -42,7 +42,7 @@ func (w *CmdTimezone) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "timezone",
+			Use:                   "timezone <zone>",
 			Aliases:               []string{"tz"},
 			Annotations:           map[string]string{"group": "Timezone"},
 			Short:                 fmt.Sprintf("Adjust date/time by timezone."),

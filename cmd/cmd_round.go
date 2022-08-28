@@ -41,7 +41,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "round",
+			Use:                   "round <up | down> <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Round"},
 			Short:                 fmt.Sprintf("Round up/down date/time."),
@@ -57,7 +57,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		var CmdRoundUp = &cobra.Command{
-			Use:                   "up",
+			Use:                   "up <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Round"},
 			Short:                 fmt.Sprintf("Round up date/time."),
@@ -73,7 +73,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		var CmdRoundDown = &cobra.Command{
-			Use:                   "down",
+			Use:                   "down <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Round"},
 			Short:                 fmt.Sprintf("Round down date/time."),

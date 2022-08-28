@@ -41,7 +41,7 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "format",
+			Use:                   "format <format>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Format"},
 			Short:                 fmt.Sprintf("Format date or time."),
@@ -60,7 +60,7 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 	return w.SelfCmd
 }
 
-func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
+func (cs *Cmds) CmdFormat(_ *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(1, args)
 		var arg string
@@ -69,6 +69,9 @@ func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 			cs.Data.SetDate(time.Now())
 		}
 		// ######################################## //
+
+
+		arg = StrToFormat(arg)
 
 
 		// ######################################## //

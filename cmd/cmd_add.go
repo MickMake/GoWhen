@@ -44,7 +44,7 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "add",
+			Use:                   "add <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
 			Short:                 fmt.Sprintf("Add duration to date."),
@@ -57,36 +57,6 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 		}
 		cmd.AddCommand(w.SelfCmd)
 		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "30s", "7w", "1m", "-- '-1y 12M -1w +7d -2h 120m -5s'")
-
-		// var CmdAddDuration = &cobra.Command{
-		// 	Use:                   "time",
-		// 	Aliases:               []string{},
-		// 	Annotations:           map[string]string{"group": "Parse"},
-		// 	Short:                 fmt.Sprintf("Add time duration to date."),
-		// 	Long:                  fmt.Sprintf("Add time duration to date."),
-		// 	DisableFlagParsing:    false,
-		// 	DisableFlagsInUseLine: false,
-		// 	PreRunE:               nil,
-		// 	RunE:                  cmds.CmdAddTime,
-		// 	Args:                  cobra.MinimumNArgs(1),
-		// }
-		// w.SelfCmd.AddCommand(CmdAddDuration)
-		// CmdAddDuration.Example = cmdHelp.PrintExamples(CmdAddDuration, "30s", "7w")
-		//
-		// var CmdAddDate = &cobra.Command{
-		// 	Use:                   "date",
-		// 	Aliases:               []string{},
-		// 	Annotations:           map[string]string{"group": "Parse"},
-		// 	Short:                 fmt.Sprintf("Add date duration to date."),
-		// 	Long:                  fmt.Sprintf("Add date duration to date."),
-		// 	DisableFlagParsing:    false,
-		// 	DisableFlagsInUseLine: false,
-		// 	PreRunE:               nil,
-		// 	RunE:                  cmds.CmdAddDate,
-		// 	Args:                  cobra.MinimumNArgs(1),
-		// }
-		// w.SelfCmd.AddCommand(CmdAddDate)
-		// CmdAddDate.Example = cmdHelp.PrintExamples(CmdAddDate, "5d")
 
 	}
 

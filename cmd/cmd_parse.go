@@ -65,7 +65,7 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "date \"Sat 31 Jul 1967 09:42:42 AEST\"", "date now", "date today")
 
 		var CmdParseDate = &cobra.Command{
-			Use:                   "date",
+			Use:                   "date <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
 			Short:                 fmt.Sprintf("Parse a date."),
@@ -80,8 +80,24 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 		CmdParseDate.Example = cmdHelp.PrintExamples(CmdParseDate, "\"Sat 31 Jul 1967 09:42:42 AEST\"", "now", "today")
 
 		// ******************************************************************************** //
-		var CmdEpoch = &cobra.Command{
-			Use:                   "epoch",
+		var CmdParseFormat = &cobra.Command{
+			Use:                   "format <date/time> <format>",
+			Aliases:               []string{},
+			Annotations:           map[string]string{"group": "Parse"},
+			Short:                 fmt.Sprintf("Parse a date with custom format."),
+			Long:                  fmt.Sprintf("Parse a date with custom format."),
+			DisableFlagParsing:    false,
+			DisableFlagsInUseLine: false,
+			PreRunE:               nil,
+			RunE:                  cmds.CmdParseFormat,
+			Args:                  cobra.MinimumNArgs(2),
+		}
+		w.SelfCmd.AddCommand(CmdParseFormat)
+		CmdParseFormat.Example = cmdHelp.PrintExamples(CmdParseFormat, "\"1967-07-01 09:42:42\" \"2006-01-02 15:04:05\"", "\"1967-07-01 09:42:42\" epoch")
+
+		// ******************************************************************************** //
+		var CmdParseEpoch = &cobra.Command{
+			Use:                   "epoch <epoch>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
 			Short:                 fmt.Sprintf("Parse a date as epoch."),
@@ -92,8 +108,8 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			RunE:                  cmds.CmdParseEpoch,
 			Args:                  cobra.MinimumNArgs(1),
 		}
-		w.SelfCmd.AddCommand(CmdEpoch)
-		CmdEpoch.Example = cmdHelp.PrintExamples(CmdEpoch, "1661585565")
+		w.SelfCmd.AddCommand(CmdParseEpoch)
+		CmdParseEpoch.Example = cmdHelp.PrintExamples(CmdParseEpoch, "1661585565")
 
 	}
 
@@ -155,22 +171,22 @@ func (cs *Cmds) CmdParseDate(cmd *cobra.Command, args []string) error {
 func (cs *Cmds) CmdParseFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(2, args)
-		var arg string
-		arg, args = cs.PopArgs(2, args)
+		var arg1 string
+		arg1, args = cs.PopArgs(1, args)
+		var arg2 string
+		arg2, args = cs.PopArgs(1, args)
 		if cs.Data.Date == nil {
 			cs.Data.SetDate(time.Now())
 		}
 		// ######################################## //
 
 
+		arg2 = StrToFormat(arg2)
 		var t time.Time
-		for _, f := range TimeFormats {
-			// fmt.Printf("Trying '%s'\n", f)
-			t, cs.Error = time.Parse(f, arg)
-			if cs.Error == nil {
-				fmt.Printf("%s\n", t.Format(time.RFC3339Nano))
-				break
-			}
+		t, cs.Error = time.Parse(arg2, arg1)
+		if cs.Error == nil {
+			fmt.Printf("%s\n", t.Format(time.RFC3339Nano))
+			break
 		}
 
 

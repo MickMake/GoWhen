@@ -3,28 +3,32 @@
 This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
 This tool does several things:
-- parse - Parse a date/time string in multiple formats.
+- parse date - Parse a date/time string in multiple formats.
+- parse format - Provide user selectable date/time parse format.
 - add - Add a date/time duration to a date/time.
 - timezone - Convert between timezones.
 - round - Rounding of date/time.
 - format - Print date/time in a user selectable format.
+- is dst - Is date/time within DST or not.
+- is leap - Is date/time a leap-year or not.
+- is weekend - Is date/time a weekend or not.
+- is weekday - Is date/time a weekday or not.
 
 What is planned for future releases:
-- is-dst - Is date/time within DST or not.
-- is-leap - Is date/time a leap-year or not.
-- is-weekend - Is date/time a weekend or not.
-- is-weekday - Is date/time a weekday or not.
 - before - Is date/time before a specified date/time.
 - after - Is date/time after a specified date/time.
 - epoch - Format date/time as UNIX epoch.
 - iso-week - Format date/time as ISO 8601.
 - diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats between two dates.
-- parse format - Provide user selectable date/time parse format.
+- Support for more parse formats.
+
+Also, since it's based on my Unify package, it also has support for self-updating.
 
 
 ## Use case example:
 Note: all commands are stackable.
+
 
 ### Parsing.
 Parse the date string `Sat 01 Jul 1967 09:42:42 AEST`.
