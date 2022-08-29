@@ -180,9 +180,9 @@ Show difference between `now` and `2022-02-01 00:00:00`.
     % GoWhen parse "now" . diff "2022-02-01 00:00:00" .
     6M 28d 7h 7m 55s
 
-Show difference between "now" and "2022-02-01 00:00:00".
+Show difference between "2022-02-01 00:00:00" and "now".
 
-    % GoWhen parse 2020-01-01 00:00:00 . diff now .
+    % GoWhen parse "2020-01-01 00:00:00" . diff now .
     2y 7M 28d 8h 19m 36s
 
 
@@ -202,7 +202,7 @@ Print current date/time as UNIX epoch, (in seconds).
     % GoWhen parse now . format epoch
     1661754986
 
-Print today's date 
+Print today's date as a week number.
 
     % parse today "" format week
     35
