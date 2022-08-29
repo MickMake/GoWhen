@@ -161,15 +161,6 @@ func (cs *Cmds) CmdParseFormat(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		switch arg[0] {
-			case "":
-				fallthrough
-			case "now":
-				fallthrough
-			case "today":
-				arg[0] = cs.Data.Date.Format("Mon 02 Jan 2006 15:04:05 MST")
-		}
-
 		var t time.Time
 		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
 		if cs.Error != nil {

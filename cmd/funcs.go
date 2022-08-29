@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"strings"
+	"time"
 )
 
 func StrToFormat(str string) string {
 	switch strings.ToLower(str) {
+		case ".":
+			str = ""
 		case "simple":
 			str = "2006-01-02T15:04:05"
 		case "layout":
@@ -44,6 +47,53 @@ func StrToFormat(str string) string {
 		// Special cases.
 		case "epoch":
 			str = "epoch"
+		case "week":
+			str = "week"
+	}
+	return str
+}
+
+func StrToDate(str string) string {
+	s := strings.ToLower(str)
+	switch {
+		case s == "":
+			fallthrough
+		case s == "now":
+			fallthrough
+		case s == "today":
+			str = time.Now().Format(time.RFC3339)
+
+		case s == "tomorrow":
+			str = time.Now().Add(time.Hour * 24).Format(time.RFC3339)
+
+		case s == "next-week":
+			str = time.Now().Add(time.Hour * 168).Format(time.RFC3339)
+
+		case s == "yesterday":
+			str = time.Now().Add(time.Hour * -24).Format(time.RFC3339)
+
+		case s == "last-week":
+			str = time.Now().Add(time.Hour * -168).Format(time.RFC3339)
+
+		case s == "epoch":
+			str = "1970-01-01 00:00:00"
+
+		// case strings.HasPrefix(s, "last"):
+		// 	r := strings.TrimPrefix(s, "last")
+		// 	r = strings.TrimSpace(r)
+		// 	switch r {
+		// 		case "decade":
+		// 			str = time.Now().Add(time.Hour * -24).Format(time.RFC3339)
+		//
+		// 		case "year":
+		// 			str = time.Now().Add(time.Hour * -24).Format(time.RFC3339)
+		//
+		// 		case "month":
+		// 			str = time.Now().Add(time.Hour * -24).Format(time.RFC3339)
+		//
+		// 		case "week":
+		// 			str = time.Now().Add(time.Hour * -168).Format(time.RFC3339)
+		// 	}
 	}
 	return str
 }

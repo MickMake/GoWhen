@@ -61,6 +61,9 @@ DefaultBinaryName - Extended help.
     Epoch       = Unix epoch
     Week        = Week number of the year.
 
+### Additional parse formats
+	.			= Best guess input string.
+
 ### Add/round durations
 	ns - Nanosecond
 	us - microsecond

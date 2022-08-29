@@ -3,8 +3,7 @@
 This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
 This tool does several things:
-- parse date - Parse a date/time string in multiple formats.
-- parse format - Provide user selectable date/time parse format.
+- parse - Parse a date/time string.
 - add - Add a date/time duration to a date/time.
 - timezone - Convert between timezones.
 - round - Rounding of date/time.
@@ -15,20 +14,88 @@ This tool does several things:
 - is weekday - Is date/time a weekday or not.
 - is before - Is date/time before a specified date/time.
 - is after - Is date/time after a specified date/time.
+- diff - Return date/time duration from a specified date/time.
 
 What is planned for future releases:
-- epoch - Format date/time as UNIX epoch.
-- iso-week - Format date/time as ISO 8601.
-- diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats between two dates.
 - Support for more parse formats, (Java and C).
 
 Also, since it's based on my Unify package, it has support for self-updating.
 
 
-## Use case example:
-Note: all commands are stackable.
+## Command summary
+Note: all commands are stackable. Except `format` and `is` - doesn't make any sense to make them stackable.
 
+### Parsing.
+	% GoWhen parse <date/time> <format | .>
+
+### Adding
+	% GoWhen add <duration>
+
+### Timezones
+	% GoWhen timezone <zone>
+	% GoWhen tz <zone>
+
+### Rounding
+	% GoWhen round up <duration>
+	% GoWhen round down <duration>
+
+### Formatting
+	% GoWhen format <format | .>
+
+### Conditionals
+	% GoWhen is dst
+	% GoWhen is leap
+	% GoWhen is weekday
+	% GoWhen is weekend
+	% GoWhen is before <date/time> <format | .>
+	% GoWhen is after <date/time> <format | .>
+
+### Difference
+	% GoWhen diff <date/time> <format | .>
+
+
+## Formats
+
+### Print / Parse formats
+	Layout      = "01/02 03:04:05PM '06 -0700"
+	ANSIC       = "Mon Jan _2 15:04:05 2006"
+	UnixDate    = "Mon Jan _2 15:04:05 MST 2006"
+	RubyDate    = "Mon Jan 02 15:04:05 -0700 2006"
+	RFC822      = "02 Jan 06 15:04 MST"
+	RFC822Z     = "02 Jan 06 15:04 -0700"
+	RFC850      = "Monday, 02-Jan-06 15:04:05 MST"
+	RFC1123     = "Mon, 02 Jan 2006 15:04:05 MST"
+	RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700"
+	RFC3339     = "2006-01-02T15:04:05Z07:00"
+	RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
+	Kitchen     = "3:04PM"
+	Stamp       = "Jan _2 15:04:05"
+	StampMilli  = "Jan _2 15:04:05.000"
+	StampMicro  = "Jan _2 15:04:05.000000"
+	StampNano   = "Jan _2 15:04:05.000000000"
+
+### Additional print formats
+    Epoch       = Unix epoch
+    Week        = Week number of the year.
+
+### Additional parse formats
+	.			= Best guess input string.
+
+### Add/round durations
+	ns - Nanosecond
+	us - microsecond
+	ms - Millisecond
+	s - Second
+	m - Minute
+	h - Hour
+	d - Day
+	w - Week
+	M - Month
+	y - Year
+
+
+## Examples:
 
 ### Parsing.
 Parse the date string `Sat 01 Jul 1967 09:42:42 AEST`.
@@ -40,6 +107,11 @@ Parse the date string `1967-07-01 09:42:42` with custom format `2006-01-02 15:04
 
 	% GoWhen parse "1967-07-01 09:42:42" "2006-01-02 15:04:05"
     1967-07-01T09:42:42Z
+
+Print UNIX epoch
+
+    % GoWhen parse "epoch" ""
+    1970-01-01T00:00:00Z
 
 
 ### Adding
@@ -92,16 +164,48 @@ Round `1967-07-01 09:42:42` up to the nearest `1 hour`.
     1967-07-01T10:00:00Z
 
 
+### Differences
+Show difference between `tomorrow` and `yesterday`.
+
+	% GoWhen parse "yesterday" . diff "tomorrow" .
+    2d
+
+Show difference between `tomorrow` and `yesterday`.
+
+	% GoWhen parse "last-week" . diff "today" .
+    7d
+
+Show difference between `now` and `2022-02-01 00:00:00`.
+
+    % GoWhen parse "now" . diff "2022-02-01 00:00:00" .
+    6M 28d 7h 7m 55s
+
+Show difference between "now" and "2022-02-01 00:00:00".
+
+    % GoWhen parse 2020-01-01 00:00:00 . diff now .
+    2y 7M 28d 8h 19m 36s
+
+
 ### Formatting
 Format `1967-07-01 09:42:42` as `Mon Jan _2 15:04:05 MST 2006`.
 
-	% GoWhen parse "1967-07-01 09:42:42" "" format UnixDate
+	% GoWhen parse "1967-07-01 09:42:42" . format UnixDate
     Sat Jul  1 09:42:42 UTC 1967
 
 Format `1967-07-01 09:42:42` as `2006-01-02 15:04:05`.
 
-	% GoWhen parse "1967-07-01 09:42:42" "" format "2006-01-02 15:04:05"
+	% GoWhen parse "1967-07-01 09:42:42" . format "2006-01-02 15:04:05"
     1967-07-01 09:42:42
+
+Print current date/time as UNIX epoch, (in seconds).
+
+    % GoWhen parse now . format epoch
+    1661754986
+
+Print today's date 
+
+    % parse today "" format week
+    35
 
 
 ### Stacking

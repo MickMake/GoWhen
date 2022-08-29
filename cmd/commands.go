@@ -16,6 +16,8 @@ type Cmds struct {
 	Timezone *CmdTimezone
 	Round    *CmdRound
 	Is       *CmdIs
+	Diff     *CmdDiff
+	Examples *CmdExamples
 
 	last   bool
 	Data  Data
@@ -59,6 +61,12 @@ func init() {
 
 		cmds.Is = NewCmdIs()
 		cmds.Is.AttachCommand(cmdRoot)
+
+		cmds.Diff = NewCmdDiff()
+		cmds.Diff.AttachCommand(cmdRoot)
+
+		cmds.Examples = NewCmdExamples()
+		cmds.Examples.AttachCommand(cmdRoot)
 
 		// cmds.Google = NewCmdGoogle()
 		// cmds.Google.AttachCommands(cmdRoot)

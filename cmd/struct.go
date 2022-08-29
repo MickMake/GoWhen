@@ -4,6 +4,7 @@ import (
 	"GoWhen/Unify/Only"
 	"fmt"
 	"github.com/araddon/dateparse"
+	"strings"
 	"time"
 )
 
@@ -12,6 +13,17 @@ type Data struct {
 	format string
 	Date *time.Time
 	Duration *time.Duration
+	// Months int		// Special - because months could be 28, 29, 30, 31 days.
+	Diff *Diff
+}
+
+type Diff struct {
+	Year int
+	Month int
+	Day int
+	Hour int
+	Minute int
+	Second int
 }
 
 func (d *Data) SetDate(t time.Time) {
@@ -19,9 +31,16 @@ func (d *Data) SetDate(t time.Time) {
 	d.Duration = nil
 }
 
+func (d *Data) SetDiff(t Diff) {
+	d.Date = nil
+	d.Duration = nil
+	d.Diff = &t
+}
+
 func (d *Data) SetDuration(t time.Duration) {
 	d.Date = nil
 	d.Duration = &t
+	// d.Months = months
 }
 
 func (d *Data) Clear() {
@@ -34,10 +53,10 @@ func (d *Data) IsWeekend() bool {
 		return false
 	}
 	switch d.Date.Weekday() {
-	case time.Sunday:
-		return true
-	case time.Saturday:
-		return true
+		case time.Sunday:
+			return true
+		case time.Saturday:
+			return true
 	}
 	return false
 }
@@ -66,12 +85,13 @@ func (d *Data) Parse(format string, timeStr string) (time.Time, error) {
 	var err error
 
 	for range Only.Once {
+		timeStr = StrToDate(timeStr)
+		format = StrToFormat(format)
+
 		// If we have defined a specific format.
 		if format != "" {
-			format = StrToFormat(format)
 			t, err = time.Parse(format, timeStr)
-			if err == nil {
-				// d.SetDate(t)
+			if err != nil {
 				break
 			}
 			break
@@ -123,7 +143,42 @@ func (d *Data) Print() {
 		}
 
 		if d.Duration != nil {
+			// s := d.Duration.String()
+			// replacer := strings.NewReplacer("", ":", "!", "?")
+			// vd := d.Duration.Hours() / 24
+
 			fmt.Printf("%s\n", d.Duration.String())
+			break
+		}
+
+		if d.Diff != nil {
+			var s string
+			if d.Diff.Year != 0 {
+				s += fmt.Sprintf("%dy ", d.Diff.Year)
+			}
+
+			if d.Diff.Month != 0 {
+				s += fmt.Sprintf("%dM ", d.Diff.Month)
+			}
+
+			if d.Diff.Day != 0 {
+				s += fmt.Sprintf("%dd ", d.Diff.Day)
+			}
+
+			if d.Diff.Hour != 0 {
+				s += fmt.Sprintf("%dh ", d.Diff.Hour)
+			}
+
+			if d.Diff.Minute != 0 {
+				s += fmt.Sprintf("%dm ", d.Diff.Minute)
+			}
+
+			if d.Diff.Second != 0 {
+				s += fmt.Sprintf("%ds ", d.Diff.Second)
+			}
+			s = strings.TrimSpace(s)
+
+			fmt.Println(s)
 			break
 		}
 	}
