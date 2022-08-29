@@ -3,6 +3,7 @@ package cmd
 import (
 	"GoWhen/Unify"
 	"GoWhen/Unify/Only"
+	"GoWhen/cmd/cal"
 	"GoWhen/defaults"
 )
 
@@ -19,8 +20,8 @@ type Cmds struct {
 	Diff     *CmdDiff
 	Examples *CmdExamples
 
-	last   bool
-	Data  Data
+	last  bool
+	Data  cal.DateTime
 	Error error
 }
 

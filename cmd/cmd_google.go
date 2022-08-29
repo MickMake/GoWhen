@@ -3,6 +3,7 @@ package cmd
 import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdHelp"
+	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -126,7 +127,7 @@ func (w *CmdGoogle) GoogleUpdate(entities ...string) error {
 		// cmds.CloudFlare.OutputType = TypeGoogle
 
 		if len(entities) == 0 {
-			entities = TimeFormats
+			entities = cal.TimeFormats
 		}
 		fmt.Printf("Saving %d entities from the PBX to Google Docs...\n", len(entities))
 

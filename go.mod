@@ -9,6 +9,7 @@ require (
 	github.com/go-co-op/gocron v1.11.0
 	github.com/google/go-github/v30 v30.1.0
 	github.com/ivanpirog/coloredcobra v1.0.1
+	github.com/jinzhu/now v1.1.5
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/mattn/go-colorable v0.1.9

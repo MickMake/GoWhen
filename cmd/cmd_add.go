@@ -4,11 +4,9 @@ import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
-	"errors"
+	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -74,8 +72,8 @@ func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		var d Duration
-		d, cs.Error = ParseDuration(arg[0])
+		var d cal.Duration
+		d, cs.Error = cal.ParseDuration(arg[0])
 		if cs.Error != nil {
 			break
 		}
@@ -86,124 +84,8 @@ func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// if cs.IsLastArg(args) {
-		// 	fmt.Printf("%s\n", cs.Data.Date.Format(time.RFC3339Nano))
-		// 	break
-		// }
 		cs.Error = cs.ReparseArgs(cmd, args)
 	}
 
 	return cs.Error
-}
-
-
-type Duration struct {
-	Time time.Duration
-	Years int64
-	Months int64
-	// Weeks int	// Handled by classic time.Duration
-	// Days int	// Handled by classic time.Duration
-}
-
-func ParseDuration(s string) (Duration, error) {
-	var duration Duration
-	var err error
-
-	for range Only.Once {
-		times := strings.Split(s, " ")
-
-		for _, ds := range times {
-			ds = strings.TrimSpace(ds)
-			if ds == "" {
-				continue
-			}
-
-			var d time.Duration
-			d, err = time.ParseDuration(ds)
-			if err == nil {
-				duration.Time += d
-				continue
-			}
-
-			//
-			// neg := false
-			// c := ds[0]
-			// if c == '-' || c == '+' {
-			// 	neg = c == '-'
-			// 	ds = ds[1:]
-			// }
-
-			lb := ds[len(ds)-1]
-
-			switch lb {
-				case 'Y':
-					fallthrough
-				case 'y':
-					// Using DateAdd type duration.
-					var lbv int64
-					lbv, err = strconv.ParseInt(ds[:len(ds)-1], 10, 64)
-					if err != nil {
-						break
-					}
-					duration.Years += lbv
-
-				case 'M':
-					// Using DateAdd type duration.
-					var lbv int64
-					lbv, err = strconv.ParseInt(ds[:len(ds)-1], 10, 64)
-					if err != nil {
-						break
-					}
-					duration.Months += lbv
-
-				case 'W':
-					fallthrough
-				case 'w':
-					// Straight-forward conversion.
-					var lbv float64
-					lbv, err = strconv.ParseFloat(ds[:len(ds)-1], 10)
-					if err != nil {
-						break
-					}
-					v := float64(int64(time.Hour) * 168) * lbv
-					duration.Time += time.Duration(v)
-
-				case 'D':
-					fallthrough
-				case 'd':
-					// Straight-forward conversion.
-					var lbv float64
-					lbv, err = strconv.ParseFloat(ds[:len(ds)-1], 10)
-					if err != nil {
-						break
-					}
-					v := float64(int64(time.Hour) * 24) * lbv
-					duration.Time += time.Duration(v)
-
-				default:
-					err = errors.New("time: invalid duration " + ds)
-					break
-			}
-		}
-	}
-
-	// for range Only.Once {
-	// 	var fv int64
-	// 	for _, v := range duration.Time {
-	// 		fv += int64(v)
-	// 	}
-	// 	duration.Time = []time.Duration{time.Duration(fv)}
-	//
-	// 	for _, v := range duration.Time {
-	// 		fv += int64(v)
-	// 	}
-	// 	duration.Years = []int64{fv}
-	//
-	// 	for _, v := range duration.Time {
-	// 		fv += int64(v)
-	// 	}
-	// 	duration.Months = []int64{fv}
-	// }
-
-	return duration, err
 }

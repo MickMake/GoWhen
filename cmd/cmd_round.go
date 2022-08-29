@@ -4,6 +4,7 @@ import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
+	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
 	"time"
@@ -111,8 +112,8 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		var d Duration
-		d, cs.Error = ParseDuration(arg[0])
+		var d cal.Duration
+		d, cs.Error = cal.ParseDuration(arg[0])
 		if cs.Error != nil {
 			break
 		}
@@ -122,10 +123,6 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// if cs.IsLastArg(args) {
-		// 	fmt.Printf("%s\n", cs.Data.Date.Format(time.RFC3339Nano))
-		// 	break
-		// }
 		cs.Error = cs.ReparseArgs(cmd, args)
 	}
 
@@ -143,8 +140,8 @@ func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		var d Duration
-		d, cs.Error = ParseDuration(arg[0])
+		var d cal.Duration
+		d, cs.Error = cal.ParseDuration(arg[0])
 		if cs.Error != nil {
 			break
 		}
@@ -155,9 +152,6 @@ func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// if cs.IsLastArg(args) {
-		// 	fmt.Printf("%s\n", cs.Data.Date.Format(time.RFC3339Nano))
-		// 	break
 		// }
 		cs.Error = cs.ReparseArgs(cmd, args)
 	}

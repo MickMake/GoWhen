@@ -4,6 +4,7 @@ import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
+	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
 	"time"
@@ -71,7 +72,7 @@ func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		cs.Data.format = StrToFormat(arg[0])
+		cs.Data.Format = cal.StrToFormat(arg[0])
 		cs.last = true
 
 
