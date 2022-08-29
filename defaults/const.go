@@ -14,8 +14,7 @@ const (
 DefaultBinaryName - Extended help.
 
 ### Parsing.
-	% DefaultBinaryName parse date <date/time> 
-	% DefaultBinaryName format <date/time> <format>
+	% DefaultBinaryName parse <date/time> <format>
 
 ### Adding
 	% DefaultBinaryName add <duration>
@@ -30,6 +29,14 @@ DefaultBinaryName - Extended help.
 
 ### Formatting
 	% DefaultBinaryName format <format>
+
+### Conditionals
+	% DefaultBinaryName is dst
+	% DefaultBinaryName is leap
+	% DefaultBinaryName is weekday
+	% DefaultBinaryName is weekend
+	% DefaultBinaryName is before <date/time> <format>
+	% DefaultBinaryName is after <date/time> <format>
 
 
 ### Print / Parse formats
@@ -49,6 +56,10 @@ DefaultBinaryName - Extended help.
 	StampMilli  = "Jan _2 15:04:05.000"
 	StampMicro  = "Jan _2 15:04:05.000000"
 	StampNano   = "Jan _2 15:04:05.000000000"
+
+### Additional print formats
+    Epoch       = Unix epoch
+    Week        = Week number of the year.
 
 ### Add/round durations
 	ns - Nanosecond

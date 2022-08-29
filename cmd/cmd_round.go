@@ -103,7 +103,7 @@ func (cs *Cmds) CmdRound(_ *cobra.Command, _ []string) error {
 func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(1, args)
-		var arg string
+		var arg []string
 		arg, args = cs.PopArgs(1, args)
 		if cs.Data.Date == nil {
 			cs.Data.SetDate(time.Now())
@@ -112,7 +112,7 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 
 
 		var d Duration
-		d, cs.Error = ParseDuration(arg)
+		d, cs.Error = ParseDuration(arg[0])
 		if cs.Error != nil {
 			break
 		}
@@ -135,7 +135,7 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(1, args)
-		var arg string
+		var arg []string
 		arg, args = cs.PopArgs(1, args)
 		if cs.Data.Date == nil {
 			cs.Data.SetDate(time.Now())
@@ -144,7 +144,7 @@ func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 
 
 		var d Duration
-		d, cs.Error = ParseDuration(arg)
+		d, cs.Error = ParseDuration(arg[0])
 		if cs.Error != nil {
 			break
 		}

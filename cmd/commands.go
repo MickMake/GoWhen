@@ -4,7 +4,6 @@ import (
 	"GoWhen/Unify"
 	"GoWhen/Unify/Only"
 	"GoWhen/defaults"
-	"time"
 )
 
 
@@ -18,64 +17,13 @@ type Cmds struct {
 	Round    *CmdRound
 	Is       *CmdIs
 
+	last   bool
 	Data  Data
 	Error error
 }
 
 var cmds Cmds
 
-
-type Data struct {
-	Date *time.Time
-	Duration *time.Duration
-}
-
-func (d *Data) SetDate(t time.Time) {
-	d.Date = &t
-	d.Duration = nil
-}
-
-func (d *Data) SetDuration(t time.Duration) {
-	d.Date = nil
-	d.Duration = &t
-}
-
-func (d *Data) Clear() {
-	d.Date = nil
-	d.Duration = nil
-}
-
-func (d *Data) IsWeekend() bool {
-	if d.Date == nil {
-		return false
-	}
-	switch d.Date.Weekday() {
-		case time.Sunday:
-			return true
-		case time.Saturday:
-			return true
-	}
-	return false
-}
-
-func (d *Data) IsWeekday() bool {
-	return !d.IsWeekend()
-}
-
-func (d *Data) IsLeap() bool {
-	if d.Date == nil {
-		return false
-	}
-	year := d.Date.Year()
-	return year%4 == 0 && (year%100 != 0 || year%400 == 0)
-}
-
-func (d *Data) IsDST() bool {
-	if d.Date == nil {
-		return false
-	}
-	return d.Date.IsDST()
-}
 
 func init() {
 	for range Only.Once {

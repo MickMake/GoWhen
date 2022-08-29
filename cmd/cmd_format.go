@@ -60,10 +60,10 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 	return w.SelfCmd
 }
 
-func (cs *Cmds) CmdFormat(_ *cobra.Command, args []string) error {
+func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(1, args)
-		var arg string
+		var arg []string
 		arg, args = cs.PopArgs(1, args)
 		if cs.Data.Date == nil {
 			cs.Data.SetDate(time.Now())
@@ -71,15 +71,16 @@ func (cs *Cmds) CmdFormat(_ *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		arg = StrToFormat(arg)
+		cs.Data.format = StrToFormat(arg[0])
+		cs.last = true
 
 
 		// ######################################## //
-		if cs.IsLastArg(args) {
-			fmt.Printf("%s\n", cs.Data.Date.Format(arg))
-			break
-		}
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// if cs.IsLastArg(args) {
+		// 	fmt.Printf("%s\n", cs.Data.Date.Format(arg))
+		// 	break
+		// }
+		cs.Error = cs.ReparseArgs(cmd, args)
 	}
 
 	return cs.Error

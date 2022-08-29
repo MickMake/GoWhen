@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
+	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -52,7 +53,7 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Args:                  cobra.MinimumNArgs(1),
 		}
 		cmd.AddCommand(w.SelfCmd)
-		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "date \"Sat 31 Jul 1967 09:42:42 AEST\"", "date now", "date today")
+		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "date \"Sat 01 Jul 1967 09:42:42 AEST\"", "date now", "date today")
 
 		var CmdIsDst = &cobra.Command{
 			Use:                   "dst",
@@ -116,6 +117,38 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 		}
 		w.SelfCmd.AddCommand(CmdIsWeekend)
 		CmdIsWeekend.Example = cmdHelp.PrintExamples(CmdIsWeekend, "")
+
+		// ******************************************************************************** //
+		var CmdIsBefore = &cobra.Command{
+			Use:                   "before <date/time> <format>",
+			Aliases:               []string{},
+			Annotations:           map[string]string{"group": "Is"},
+			Short:                 fmt.Sprintf("Is parsed date before specified date?"),
+			Long:                  fmt.Sprintf("Is parsed date before specified date?"),
+			DisableFlagParsing:    false,
+			DisableFlagsInUseLine: false,
+			PreRunE:               nil,
+			RunE:                  cmds.CmdIsBefore,
+			Args:                  cobra.MinimumNArgs(2),
+		}
+		w.SelfCmd.AddCommand(CmdIsBefore)
+		CmdIsBefore.Example = cmdHelp.PrintExamples(CmdIsBefore, "")
+
+		// ******************************************************************************** //
+		var CmdIsAfter = &cobra.Command{
+			Use:                   "after <date/time> <format>",
+			Aliases:               []string{},
+			Annotations:           map[string]string{"group": "Is"},
+			Short:                 fmt.Sprintf("Is parsed date after specified date?"),
+			Long:                  fmt.Sprintf("Is parsed date after specified date?"),
+			DisableFlagParsing:    false,
+			DisableFlagsInUseLine: false,
+			PreRunE:               nil,
+			RunE:                  cmds.CmdIsAfter,
+			Args:                  cobra.MinimumNArgs(2),
+		}
+		w.SelfCmd.AddCommand(CmdIsAfter)
+		CmdIsAfter.Example = cmdHelp.PrintExamples(CmdIsAfter, "")
 
 	}
 
@@ -220,6 +253,70 @@ func (cs *Cmds) CmdIsWeekend(cmd *cobra.Command, args []string) error {
 
 
 		if cs.Data.IsWeekend() {
+			fmt.Println(True)
+		} else {
+			fmt.Println(False)
+		}
+		cs.Data.Clear()
+
+
+		// ######################################## //
+		cs.Error = cs.ReparseArgs(cmd, args)
+	}
+
+	return cs.Error
+}
+
+func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
+	for range Only.Once {
+		args = cmdConfig.FillArray(2, args)
+		var arg []string
+		arg, args = cs.PopArgs(2, args)
+		if cs.Data.Date == nil {
+			cs.Data.SetDate(time.Now())
+		}
+		// ######################################## //
+
+
+		var t time.Time
+		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
+		if cs.Error != nil {
+			break
+		}
+
+		if cs.Data.Date.Before(t) {
+			fmt.Println(True)
+		} else {
+			fmt.Println(False)
+		}
+		cs.Data.Clear()
+
+
+		// ######################################## //
+		cs.Error = cs.ReparseArgs(cmd, args)
+	}
+
+	return cs.Error
+}
+
+func (cs *Cmds) CmdIsAfter(cmd *cobra.Command, args []string) error {
+	for range Only.Once {
+		args = cmdConfig.FillArray(2, args)
+		var arg []string
+		arg, args = cs.PopArgs(2, args)
+		if cs.Data.Date == nil {
+			cs.Data.SetDate(time.Now())
+		}
+		// ######################################## //
+
+
+		var t time.Time
+		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
+		if cs.Error != nil {
+			break
+		}
+
+		if cs.Data.Date.After(t) {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)

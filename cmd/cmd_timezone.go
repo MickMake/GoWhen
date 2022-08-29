@@ -64,7 +64,7 @@ func (w *CmdTimezone) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdTimezone(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(1, args)
-		var arg string
+		var arg []string
 		arg, args = cs.PopArgs(1, args)
 		if cs.Data.Date == nil {
 			cs.Data.SetDate(time.Now())
@@ -73,9 +73,9 @@ func (cs *Cmds) CmdTimezone(cmd *cobra.Command, args []string) error {
 
 
 		var loc *time.Location
-		loc, cs.Error = time.LoadLocation(arg)
+		loc, cs.Error = time.LoadLocation(arg[0])
 		if cs.Error != nil {
-			cs.Error = errors.New("unknown timezone '" + arg + "'")
+			cs.Error = errors.New("unknown timezone '" + arg[0] + "'")
 			break
 		}
 

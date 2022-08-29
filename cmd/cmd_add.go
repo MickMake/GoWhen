@@ -66,7 +66,7 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		args = cmdConfig.FillArray(1, args)
-		var arg string
+		var arg []string
 		arg, args = cs.PopArgs(1, args)
 		if cs.Data.Date == nil {
 			cs.Data.SetDate(time.Now())
@@ -75,7 +75,7 @@ func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
 
 
 		var d Duration
-		d, cs.Error = ParseDuration(arg)
+		d, cs.Error = ParseDuration(arg[0])
 		if cs.Error != nil {
 			break
 		}

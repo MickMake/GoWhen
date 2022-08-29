@@ -5,17 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="56d89ae2-ef83-43ae-bcc0-e292e0a8e279" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/cmd_is.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cmd/funcs.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/struct.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cmd_add.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_add.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cmd_format.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_format.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cmd_is.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_is.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cmd_parse.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_parse.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cmd_round.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_round.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cmd_timezone.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_timezone.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/commands.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/funcs.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/funcs.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/reparse.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/reparse.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/defaults/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/defaults/const.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
@@ -72,7 +74,7 @@
     <configuration name="GoWhen" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="GoWhen" />
       <working_directory value="$PROJECT_DIR$" />
-      <parameters value="is dst" />
+      <parameters value="parse &quot;1967-07-01T09:42:42&quot; &quot;&quot; format foo" />
       <kind value="PACKAGE" />
       <package value="GoWhen" />
       <directory value="$PROJECT_DIR$" />
@@ -98,13 +100,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/cmd/cmd_is.go</url>
-          <line>169</line>
-          <option name="timeStamp" value="2" />
+          <line>286</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/cmd/cmd_is.go</url>
-          <line>143</line>
-          <option name="timeStamp" value="3" />
+          <line>318</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/cmd/cmd_is.go</url>
+          <line>313</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/cmd/struct.go</url>
+          <line>81</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -3,22 +3,27 @@ package cmd
 import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdCron"
-	"fmt"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 
 func (cs *Cmds) ReparseArgs(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		// args = args[cull:]
-		if len(args) == 0 {
-			switch {
-				case cs.Data.Date != nil:
-					fmt.Printf("%s\n", cs.Data.Date.Format(time.RFC3339Nano))
-				case cs.Data.Duration != nil:
-					fmt.Printf("%s\n", cs.Data.Duration.String())
-			}
+		if (len(args) == 0) || (cs.last) {
+			cs.Data.Print()
+			// switch {
+			// 	case cs.Data.Date != nil:
+			// 		if cs.Data.format == "epoch" {
+			// 			break
+			// 		}
+			// 		if cs.Data.format == "" {
+			// 			cs.Data.format = time.RFC3339Nano
+			// 		}
+			// 		fmt.Printf("%s\n", cs.Data.Date.Format(cs.Data.format))
+			// 	case cs.Data.Duration != nil:
+			// 		fmt.Printf("%s\n", cs.Data.Duration.String())
+			// }
 			break
 		}
 
@@ -35,14 +40,21 @@ func (cs *Cmds) ReparseArgs(cmd *cobra.Command, args []string) error {
 	return cs.Error
 }
 
-func (cs *Cmds) PopArgs(cull int, args []string) (string, []string) {
-	if cull > len(args) {
-		return "", args
-	}
+func (cs *Cmds) PopArgs1(args []string) (string, []string) {
 	if len(args) == 0 {
 		return "", args
 	}
-	return (args)[0], (args)[cull:]
+	return (args)[0], (args)[1:]
+}
+
+func (cs *Cmds) PopArgs(cull int, args []string) ([]string, []string) {
+	if cull > len(args) {
+		return []string{}, args
+	}
+	if len(args) == 0 {
+		return []string{}, args
+	}
+	return (args)[:cull], (args)[cull:]
 }
 
 func (cs *Cmds) IsLastArg(args []string) bool {

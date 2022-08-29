@@ -6,6 +6,8 @@ import (
 
 func StrToFormat(str string) string {
 	switch strings.ToLower(str) {
+		case "simple":
+			str = "2006-01-02T15:04:05"
 		case "layout":
 			str = "01/02 03:04:05PM '06 -0700"
 		case "ansic":
@@ -38,6 +40,10 @@ func StrToFormat(str string) string {
 			str = "Jan _2 15:04:05.000000"
 		case "stampnano":
 			str = "Jan _2 15:04:05.000000000"
+
+		// Special cases.
+		case "epoch":
+			str = "epoch"
 	}
 	return str
 }
