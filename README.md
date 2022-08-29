@@ -15,9 +15,9 @@ This tool does several things:
 - is before - Is date/time before a specified date/time.
 - is after - Is date/time after a specified date/time.
 - diff - Return date/time duration from a specified date/time.
+- cal - Produce a traditional calendar in multiple formats.
 
 What is planned for future releases:
-- cal - Produce a traditional calendar in multiple formats between two dates.
 - Support for more parse formats, (Java and C).
 
 Also, since it's based on my Unify package, it has support for self-updating.
@@ -41,7 +41,7 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	% GoWhen round down <duration>
 
 ### Formatting
-	% GoWhen format <format | .>
+	% GoWhen format <format | cal-year | cal-month | cal-week | .>
 
 ### Conditionals
 	% GoWhen is dst
@@ -207,6 +207,66 @@ Print today's date as a week number.
     % parse today "" format week
     35
 
+Print a calendar for the year of `1967-07-01`.
+
+    % GoWhen parse 1967-07-01 . format cal-year
+```
+|-------------- 1967 --------------|
+| Jan 1967
++----+----+----+----+----+----+----+
+| S  | M  | T  | W  | T  | F  | S  |
++----+----+----+----+----+----+----+
+|  1 |  2 |  3 |  4 |  5 |  6 |  7 |
+|  8 |  9 | 10 | 11 | 12 | 13 | 14 |
+| 15 | 16 | 17 | 18 | 19 | 20 | 21 |
+
+...
+
+
+| 19 | 20 | 21 | 22 | 23 | 24 | 25 |
+| 26 | 27 | 28 | 29 | 30 |  1 |  2 |
++----+----+----+----+----+----+----+
+| Dec 1967
++----+----+----+----+----+----+----+
+| S  | M  | T  | W  | T  | F  | S  |
++----+----+----+----+----+----+----+
+| 26 | 27 | 28 | 29 | 30 |  1 |  2 |
+|  3 |  4 |  5 |  6 |  7 |  8 |  9 |
+| 10 | 11 | 12 | 13 | 14 | 15 | 16 |
+| 17 | 18 | 19 | 20 | 21 | 22 | 23 |
+| 24 | 25 | 26 | 27 | 28 | 29 | 30 |
+| 31 |  1 |  2 |  3 |  4 |  5 |  6 |
++----+----+----+----+----+----+----+
+```
+
+Print a calendar for the month of `1967-07`.
+
+    % GoWhen parse 1967-07 . format cal-month
+```
+| Jul 1967
++----+----+----+----+----+----+----+
+| S  | M  | T  | W  | T  | F  | S  |
++----+----+----+----+----+----+----+
+| 25 | 26 | 27 | 28 | 29 | 30 |  1 |
+|  2 |  3 |  4 |  5 |  6 |  7 |  8 |
+|  9 | 10 | 11 | 12 | 13 | 14 | 15 |
+| 16 | 17 | 18 | 19 | 20 | 21 | 22 |
+| 23 | 24 | 25 | 26 | 27 | 28 | 29 |
+| 30 | 31 |  1 |  2 |  3 |  4 |  5 |
++----+----+----+----+----+----+----+
+```
+
+Print a calendar for the week of `1967-07-01`.
+
+    % GoWhen parse 1967-07-01 . format cal-week
+```
+| Jun 1967
++----+----+----+----+----+----+---+
+| S  | M  | T  | W  | T  | F  | S |
++----+----+----+----+----+----+---+
+| 25 | 26 | 27 | 28 | 29 | 30 | 1 |
++----+----+----+----+----+----+---+
+```
 
 ### Stacking
 Parse the date `Sat 31 Jul 1967 09:42:42 AEST`, add `20 days` and print as format `20060102/20060102_150405-webcam.jpg`.
