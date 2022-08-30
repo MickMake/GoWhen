@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+
 const (
 	flagGoogleSheet       = "google-sheet"
 	flagGoogleSheetUpdate = "update"
@@ -25,6 +26,7 @@ type CmdGoogle struct {
 	cmd     *cobra.Command
 	SelfCmd *cobra.Command
 }
+
 
 func NewCmdGoogle() *CmdGoogle {
 	var ret *CmdGoogle
@@ -108,15 +110,15 @@ func (w *CmdGoogle) InitArgs(_ *cobra.Command, _ []string) error {
 func (w *CmdGoogle) CmdGoogleUpdate(cmd *cobra.Command, args []string) {
 	for range Only.Once {
 		switch {
-		case len(args) == 0:
-			w.Error = cmd.Help()
+			case len(args) == 0:
+				w.Error = cmd.Help()
 
-		case args[0] == "all":
-			w.Error = w.GoogleUpdate(args...)
+			case args[0] == "all":
+				w.Error = w.GoogleUpdate(args...)
 
-		default:
-			fmt.Println("Unknown sub-command.")
-			_ = cmd.Help()
+			default:
+				fmt.Println("Unknown sub-command.")
+				_ = cmd.Help()
 		}
 	}
 }

@@ -2,21 +2,14 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
-	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 
 //goland:noinspection GoNameStartsWithPackageName
-type CmdRound struct {
-	Error   error
-	cmd     *cobra.Command
-	SelfCmd *cobra.Command
-}
+type CmdRound CmdDefault
 
 
 func NewCmdRound() *CmdRound {
@@ -49,7 +42,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Round up/down date/time."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdRound,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -65,7 +58,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Round up date/time."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdRoundUp,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -81,7 +74,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Round down date/time."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdRoundDown,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -103,23 +96,15 @@ func (cs *Cmds) CmdRound(_ *cobra.Command, _ []string) error {
 
 func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(1, args)
-		var arg []string
-		arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
+		var arg string
+		arg, args = cs.PopArg(args)
 		// ######################################## //
 
 
-		var d cal.Duration
-		d, cs.Error = cal.ParseDuration(arg[0])
+		cs.Error = cs.Data.DateRound(arg)
 		if cs.Error != nil {
 			break
 		}
-
-		t := cs.Data.Date.Round(d.Time)
-		cs.Data.SetDate(t)
 
 
 		// ######################################## //
@@ -131,28 +116,18 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 
 func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(1, args)
-		var arg []string
-		arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
+		var arg string
+		arg, args = cs.PopArg(args)
 		// ######################################## //
 
 
-		var d cal.Duration
-		d, cs.Error = cal.ParseDuration(arg[0])
+		cs.Error = cs.Data.DateTruncate(arg)
 		if cs.Error != nil {
 			break
 		}
 
-		t := cs.Data.Date.Truncate(d.Time)
-		cs.Data.SetDate(t)
-		cs.Data.Date.ISOWeek()
-
 
 		// ######################################## //
-		// }
 		cs.Error = cs.ReparseArgs(cmd, args)
 	}
 

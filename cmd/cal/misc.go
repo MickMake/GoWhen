@@ -200,6 +200,7 @@ func ParseDuration(s string) (Duration, error) {
 }
 
 // DateDiff - Stolen from https://stackoverflow.com/questions/36530251/time-since-with-months-and-years
+//goland:noinspection GoRedundantConversion
 func DateDiff(a, b time.Time) Diff {
 	var d Diff
 
@@ -316,30 +317,39 @@ func StrToFormat(str string) string {
 	return str
 }
 
-func StrToDate(str string) string {
-	s := strings.ToLower(str)
-	switch {
-		case s == "":
-			fallthrough
-		case s == "now":
-			fallthrough
-		case s == "today":
-			str = time.Now().Format(time.RFC3339)
+func StrToDate(str string) *time.Time {
+	var ret *time.Time
 
-		case s == "tomorrow":
-			str = time.Now().Add(time.Hour * 24).Format(time.RFC3339)
+	for range Only.Once {
+		s := strings.ToLower(str)
+		switch {
+			case s == "":
+				fallthrough
+			case s == "now":
+				fallthrough
+			case s == "today":
+				r := time.Now()
+				ret = &r
 
-		case s == "next-week":
-			str = time.Now().Add(time.Hour * 168).Format(time.RFC3339)
+			case s == "tomorrow":
+				r := time.Now().Add(time.Hour * 24)
+				ret = &r
 
-		case s == "yesterday":
-			str = time.Now().Add(time.Hour * -24).Format(time.RFC3339)
+			case s == "next-week":
+				r := time.Now().Add(time.Hour * 168)
+				ret = &r
 
-		case s == "last-week":
-			str = time.Now().Add(time.Hour * -168).Format(time.RFC3339)
+			case s == "yesterday":
+				r := time.Now().Add(time.Hour * -24)
+				ret = &r
 
-		case s == "epoch":
-			str = "1970-01-01 00:00:00"
+			case s == "last-week":
+				r := time.Now().Add(time.Hour * -168)
+				ret = &r
+
+			case s == "epoch":
+				r, _ := time.Parse("2006-01-02 15:04:05", "1970-01-01 00:00:00")
+				ret = &r
 
 			// case strings.HasPrefix(s, "last"):
 			// 	r := strings.TrimPrefix(s, "last")
@@ -357,6 +367,7 @@ func StrToDate(str string) string {
 			// 		case "week":
 			// 			str = time.Now().Add(time.Hour * -168).Format(time.RFC3339)
 			// 	}
+		}
 	}
-	return str
+	return ret
 }

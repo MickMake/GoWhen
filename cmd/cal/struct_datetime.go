@@ -2,97 +2,338 @@ package cal
 
 import (
 	"GoWhen/Unify/Only"
+	"errors"
 	"fmt"
 	"github.com/araddon/dateparse"
-	"github.com/olekukonko/tablewriter"
-	"os"
 	"strings"
 	"time"
 )
 
 
-type DateTime struct {
-	Format string
-	Date   *time.Time
-	Duration *time.Duration
-	// Months int		// Special - because months could be 28, 29, 30, 31 days.
-	Diff *Diff
-}
-
 type Diff struct {
-	Year int
-	Month int
-	Day int
-	Hour int
+	Year   int
+	Month  int
+	Day    int
+	Hour   int
 	Minute int
 	Second int
 }
 
+func (d *Diff) String() string {
+	var s string
 
-func (d *DateTime) SetDate(t time.Time) {
-	d.Date = &t
-	d.Duration = nil
+	for range Only.Once {
+		if d.Year != 0 {
+			s += fmt.Sprintf("%dy ", d.Year)
+		}
+
+		if d.Month != 0 {
+			s += fmt.Sprintf("%dM ", d.Month)
+		}
+
+		if d.Day != 0 {
+			s += fmt.Sprintf("%dd ", d.Day)
+		}
+
+		if d.Hour != 0 {
+			s += fmt.Sprintf("%dh ", d.Hour)
+		}
+
+		if d.Minute != 0 {
+			s += fmt.Sprintf("%dm ", d.Minute)
+		}
+
+		if d.Second != 0 {
+			s += fmt.Sprintf("%ds ", d.Second)
+		}
+		s = strings.TrimSpace(s)
+	}
+
+	return s
 }
 
-func (d *DateTime) SetDiff(t Diff) {
-	d.Date = nil
-	d.Duration = nil
+
+type Data struct {
+	Format   string
+	FromDate DateTime
+	ToDate   DateTime
+	Diff     *Diff
+	Duration *time.Duration
+	Range    *Duration
+}
+type DateTime struct {
+	*time.Time
+}
+
+func (d *Data) SetFromDate(t time.Time) {
+	d.FromDate.Time = &t
+}
+
+func (d *Data) SetToDate(t time.Time) {
+	d.ToDate.Time = &t
+}
+
+func (d *Data) SetDiff(t Diff) {
 	d.Diff = &t
 }
 
-func (d *DateTime) SetDuration(t time.Duration) {
-	d.Date = nil
+func (d *Data) SetDuration(t time.Duration) {
 	d.Duration = &t
-	// d.Months = months
 }
 
-func (d *DateTime) Clear() {
-	d.Date = nil
-	d.Duration = nil
+func (d *Data) SetRange(t Duration) {
+	d.Range = &t
 }
 
-func (d *DateTime) IsWeekend() bool {
-	if d.Date == nil {
-		return false
+func (d *Data) DateTruncate(duration string) error {
+	var err error
+	for range Only.Once {
+		var t Duration
+		t, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		d.SetToDate(d.FromDate.Time.Truncate(t.Time))
 	}
-	switch d.Date.Weekday() {
-	case time.Sunday:
-		return true
-	case time.Saturday:
+	return err
+}
+
+func (d *Data) DateRound(duration string) error {
+	var err error
+	for range Only.Once {
+		var t Duration
+		t, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		d.SetToDate(d.FromDate.Time.Round(t.Time))
+	}
+	return err
+}
+
+func (d *Data) DateTimezone(loc string) error {
+	var err error
+	for range Only.Once {
+		var l *time.Location
+		l, err = time.LoadLocation(loc)
+		if err != nil {
+			err = errors.New("unknown timezone '" + loc + "'")
+			break
+		}
+		d.SetToDate(d.FromDate.Time.In(l))
+	}
+	return err
+}
+
+func (d *Data) DateParse(format string, timeStr string) error {
+	var err error
+	for range Only.Once {
+		var t time.Time
+		t, err = d.ParseDateString(format, timeStr)
+		if err != nil {
+			break
+		}
+		d.SetFromDate(t)
+	}
+	return err
+}
+
+// DateRange - SetToDate
+func (d *Data) DateRange(format string, toStr string, duration string) error {
+	var err error
+	for range Only.Once {
+		d.Format = format
+
+		var t time.Time
+		t, err = d.ParseDateString(format, toStr)
+		if err != nil {
+			break
+		}
+		d.SetToDate(t)
+
+		var td Duration
+		td, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		d.SetRange(td)
+	}
+	return err
+}
+
+// DateDiff - SetToDate / SetDiff
+func (d *Data) DateDiff(format string, timeStr string) error {
+	var err error
+	for range Only.Once {
+		var t time.Time
+		t, err = d.ParseDateString(format, timeStr)
+		if err != nil {
+			break
+		}
+		d.SetToDate(t)
+		diff := DateDiff(*d.FromDate.Time, t)
+		d.SetDiff(diff)
+	}
+	return err
+}
+
+// DateAdd - SetDuration / SetToDate
+func (d *Data) DateAdd(duration string) error {
+	var err error
+	for range Only.Once {
+		var dur Duration
+		dur, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		d.SetDuration(dur.Time)
+		t := d.FromDate.AddDate(int(dur.Years), int(dur.Months), 0)
+		t = t.Add(dur.Time)
+		d.SetToDate(t)
+	}
+	return err
+}
+
+func (d *Data) IsDateNil() bool {
+	if d.FromDate.Time == nil {
 		return true
 	}
 	return false
 }
 
-func (d *DateTime) IsWeekday() bool {
-	return !d.IsWeekend()
+func (d *Data) SetDateIfNil() {
+	if d.FromDate.Time == nil {
+		d.SetFromDate(time.Now())
+	}
 }
 
-func (d *DateTime) IsLeap() bool {
-	if d.Date == nil {
+func (d *Data) IsDateWeekend() bool {
+	if d.FromDate.Time == nil {
 		return false
 	}
-	year := d.Date.Year()
+	switch d.FromDate.Time.Weekday() {
+		case time.Sunday:
+			return true
+		case time.Saturday:
+			return true
+	}
+	return false
+}
+
+func (d *Data) IsDateWeekday() bool {
+	return !d.IsDateWeekend()
+}
+
+func (d *Data) IsDateLeap() bool {
+	if d.FromDate.Time == nil {
+		return false
+	}
+	year := d.FromDate.Time.Year()
 	return year%4 == 0 && (year%100 != 0 || year%400 == 0)
 }
 
-func (d *DateTime) IsDST() bool {
-	if d.Date == nil {
+func (d *Data) IsDateDST() bool {
+	if d.FromDate.Time == nil {
 		return false
 	}
-	return d.Date.IsDST()
+	return d.FromDate.Time.IsDST()
 }
 
-func (d *DateTime) Parse(format string, timeStr string) (time.Time, error) {
+func (d *Data) IsDateBefore(format string, timeStr string) bool {
+	var yes bool
+	for range Only.Once {
+		t, err := d.ParseDateString(format, timeStr)
+		if err != nil {
+			break
+		}
+		if d.FromDate.Time.Before(t) {
+			yes = true
+			break
+		}
+		yes = false
+	}
+	return yes
+}
+
+func (d *Data) IsDateAfter(format string, timeStr string) bool {
+	var yes bool
+	for range Only.Once {
+		t, err := d.ParseDateString(format, timeStr)
+		if err != nil {
+			break
+		}
+		if d.FromDate.Time.After(t) {
+			yes = true
+			break
+		}
+		yes = false
+	}
+	return yes
+}
+
+
+// func (d *Data) IsDate() bool {
+// 	if d.FromDate.Time != nil {
+// 		return true
+// 	}
+// 	return false
+// }
+//
+// func (d *Data) IsDiff() bool {
+// 	if d.Diff != nil {
+// 		return true
+// 	}
+// 	return false
+// }
+//
+// func (d *Data) IsDuration() bool {
+// 	if d.Duration != nil {
+// 		return true
+// 	}
+// 	return false
+// }
+
+
+func (d *Data) Clear() {
+	d.FromDate.Time = nil
+	d.ToDate.Time = nil
+	d.Diff = nil
+	d.Duration = nil
+}
+
+// func (d *Data) DateSet(t time.Time) {
+// 	d.Date.Time = &t
+// 	d.Duration = nil
+// 	d.Diff = nil
+// }
+//
+// func (d *Data) DiffSet(t Diff) {
+// 	d.Date.Time = nil
+// 	d.Duration = nil
+// 	d.Diff = &t
+// }
+//
+// func (d *Data) DurationSet(t time.Duration) {
+// 	d.Date.Time = nil
+// 	d.Duration = &t
+// 	d.Diff = nil
+// }
+
+func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error) {
 	var t time.Time
 	var err error
 
 	for range Only.Once {
-		timeStr = StrToDate(timeStr)
+		t2 := StrToDate(timeStr)
+		if t2 != nil {
+			t = *t2
+			break
+		}
 		format = StrToFormat(format)
 
 		// If we have defined a specific format.
 		if format != "" {
+			d.Format = format
 			t, err = time.Parse(format, timeStr)
 			if err != nil {
 				break
@@ -101,10 +342,10 @@ func (d *DateTime) Parse(format string, timeStr string) (time.Time, error) {
 		}
 
 		// See if we can auto-discover the format.
-		var l string
-		l, err = dateparse.ParseFormat(timeStr)
+		format, err = dateparse.ParseFormat(timeStr)
 		if err == nil {
-			t, err = time.Parse(l, timeStr)
+			d.Format = format
+			t, err = time.Parse(format, timeStr)
 			break
 		}
 
@@ -112,7 +353,7 @@ func (d *DateTime) Parse(format string, timeStr string) (time.Time, error) {
 		for _, f := range TimeFormats {
 			t, err = time.Parse(f, timeStr)
 			if err == nil {
-				// d.SetDate(t)
+				d.Format = f
 				break
 			}
 		}
@@ -124,123 +365,134 @@ func (d *DateTime) Parse(format string, timeStr string) (time.Time, error) {
 	return t, err
 }
 
-func (d *DateTime) Print() {
+
+func (d *Data) Print() {
 	for range Only.Once {
-		if d.Date != nil {
-			if d.Format == "epoch" {
-				fmt.Printf("%d\n", d.Date.Unix())
-				break
-			}
-
-			if d.Format == "week" {
-				_, w := d.Date.ISOWeek()
-				fmt.Printf("%d\n", w)
-				break
-			}
-
-			if d.Format == "cal-week" {
-				m := New(*d.Date).Week()
-				m.Print()
-				break
-			}
-
-			if d.Format == "cal-month" {
-				m := New(*d.Date).Month()
-				m.Print()
-				break
-			}
-
-			if d.Format == "cal-year" {
-				y := New(*d.Date).Year()
-				y.Print()
-				break
-			}
-
-			if d.Format == "" {
-				d.Format = time.RFC3339Nano
-			}
-			fmt.Printf("%s\n", d.Date.Format(d.Format))
-			break
-		}
-
-		if d.Duration != nil {
-			// s := d.Duration.String()
-			// replacer := strings.NewReplacer("", ":", "!", "?")
-			// vd := d.Duration.Hours() / 24
-
-			fmt.Printf("%s\n", d.Duration.String())
+		if d.Range != nil {
+			d.PrintRange()
 			break
 		}
 
 		if d.Diff != nil {
-			var s string
-			if d.Diff.Year != 0 {
-				s += fmt.Sprintf("%dy ", d.Diff.Year)
-			}
+			d.PrintDiff()
+			break
+		}
 
-			if d.Diff.Month != 0 {
-				s += fmt.Sprintf("%dM ", d.Diff.Month)
-			}
+		if d.Duration != nil {
+			d.PrintDuration()
+			break
+		}
 
-			if d.Diff.Day != 0 {
-				s += fmt.Sprintf("%dd ", d.Diff.Day)
-			}
+		if d.ToDate.Time != nil {
+			d.PrintDate()
+			break
+		}
 
-			if d.Diff.Hour != 0 {
-				s += fmt.Sprintf("%dh ", d.Diff.Hour)
-			}
-
-			if d.Diff.Minute != 0 {
-				s += fmt.Sprintf("%dm ", d.Diff.Minute)
-			}
-
-			if d.Diff.Second != 0 {
-				s += fmt.Sprintf("%ds ", d.Diff.Second)
-			}
-			s = strings.TrimSpace(s)
-
-			fmt.Println(s)
+		if d.FromDate.Time != nil {
+			d.PrintDate()
 			break
 		}
 	}
 }
 
-
-func (y *Year) Print()  {
-	x := (*y)[1][1][1]
-	fmt.Printf("|-------------- %s --------------|\n", x.Format("2006"))
-	for _, m := range *y {
-		m.Print()
-		fmt.Println()
-	}
-}
-
-func (m *Month) Print()  {
-	x := (*m)[1][1]
-	fmt.Printf("| %s\n", x.Format("Jan 2006"))
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"S", "M", "T", "W", "T", "F", "S"})
-	table.SetBorder(true)
-	for _, month := range *m {
-		var row []string
-		for _, week := range month {
-			row = append(row, fmt.Sprintf("%d", week.Day()))
+func (d *Data) PrintDate() {
+	for range Only.Once {
+		if d.FromDate.Time == nil {
+			break
 		}
-		table.Append(row)
+
+		if d.Format == "epoch" {
+			fmt.Printf("%d\n", d.FromDate.Time.Unix())
+			break
+		}
+
+		if d.Format == "week" {
+			_, w := d.FromDate.Time.ISOWeek()
+			fmt.Printf("%d\n", w)
+			break
+		}
+
+		if d.Format == "list" {
+			m := New(*d.FromDate.Time).Week()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-week" {
+			m := New(*d.FromDate.Time).Week()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-month" {
+			m := New(*d.FromDate.Time).Month()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-year" {
+			y := New(*d.FromDate.Time).Year()
+			y.Print()
+			break
+		}
+
+		if d.Format == "" {
+			d.Format = time.RFC3339Nano
+		}
+		fmt.Printf("%s\n", d.FromDate.Time.Format(d.Format))
 	}
-	table.Render()
 }
 
-func (w *Week) Print()  {
-	x := (*w)[1]
-	fmt.Printf("| %s\n", x.Format("Jan 2006"))
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"S", "M", "T", "W", "T", "F", "S"})
-	table.SetBorder(true)
-	var row []string
-	for _, week := range *w {
-		row = append(row, fmt.Sprintf("%d", week.Day()))
+func (d *Data) PrintDuration() {
+	for range Only.Once {
+		if d.Duration == nil {
+			break
+		}
+		fmt.Println(d.Duration.String())
 	}
-	table.Append(row)
-	table.Render()
+}
+
+func (d *Data) PrintDiff() {
+	for range Only.Once {
+		if d.Diff == nil {
+			break
+		}
+		fmt.Println(d.Diff.String())
+	}
+}
+
+func (d *Data) PrintRange() {
+	for range Only.Once {
+		if d.Range == nil {
+			break
+		}
+
+		if d.Format == "" {
+			d.Format = time.RFC3339
+		}
+
+		var lt time.Time
+		if d.ToDate.Time.Before(*d.FromDate.Time) {
+			for t := *d.FromDate.Time; t.After(*d.ToDate.Time); {
+				fmt.Println(t.Format(d.Format))
+				t = t.AddDate(-int(d.Range.Years), -int(d.Range.Months), 0).Add(-d.Range.Time)
+				if lt == t {
+					// Avoid endless loops
+					break
+				}
+				lt = t
+			}
+			break
+		}
+
+		for t := *d.FromDate.Time; t.Before(*d.ToDate.Time); {
+			fmt.Println(t.Format(d.Format))
+			t = t.AddDate(int(d.Range.Years), int(d.Range.Months), 0).Add(d.Range.Time)
+			if lt == t {
+				// Avoid endless loops
+				break
+			}
+			lt = t
+		}
+	}
 }

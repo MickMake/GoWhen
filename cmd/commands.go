@@ -5,6 +5,7 @@ import (
 	"GoWhen/Unify/Only"
 	"GoWhen/cmd/cal"
 	"GoWhen/defaults"
+	"github.com/spf13/cobra"
 )
 
 
@@ -18,12 +19,21 @@ type Cmds struct {
 	Round    *CmdRound
 	Is       *CmdIs
 	Diff     *CmdDiff
+	Range    *CmdRange
 	Examples *CmdExamples
 
 	last  bool
-	Data  cal.DateTime
+	Data  cal.Data
 	Error error
 }
+
+//goland:noinspection GoNameStartsWithPackageName
+type CmdDefault struct {
+	Error   error
+	cmd     *cobra.Command
+	SelfCmd *cobra.Command
+}
+
 
 var cmds Cmds
 
@@ -68,6 +78,9 @@ func init() {
 
 		cmds.Examples = NewCmdExamples()
 		cmds.Examples.AttachCommand(cmdRoot)
+
+		cmds.Range = NewCmdRange()
+		cmds.Range.AttachCommand(cmdRoot)
 
 		// cmds.Google = NewCmdGoogle()
 		// cmds.Google.AttachCommands(cmdRoot)

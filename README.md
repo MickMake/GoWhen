@@ -16,6 +16,7 @@ This tool does several things:
 - is after - Is date/time after a specified date/time.
 - diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats.
+- range - Produce a range of dates with variable duration span between.
 
 What is planned for future releases:
 - Support for more parse formats, (Java and C).
@@ -27,7 +28,7 @@ Also, since it's based on my Unify package, it has support for self-updating.
 Note: all commands are stackable. Except `format` and `is` - doesn't make any sense to make them stackable.
 
 ### Parsing.
-	% GoWhen parse <date/time> <format | .>
+	% GoWhen parse <format | .> <date/time>
 
 ### Adding
 	% GoWhen add <duration>
@@ -48,11 +49,14 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	% GoWhen is leap
 	% GoWhen is weekday
 	% GoWhen is weekend
-	% GoWhen is before <date/time> <format | .>
-	% GoWhen is after <date/time> <format | .>
+	% GoWhen is before <format | .> <date/time>
+	% GoWhen is after <format | .> <date/time>
 
 ### Difference
-	% GoWhen diff <date/time> <format | .>
+	% GoWhen diff <format | .> <date/time>
+
+### Ranging
+	% GoWhen range <format | .> <to date/time> <duration>
 
 
 ## Formats
@@ -93,6 +97,16 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	w - Week
 	M - Month
 	y - Year
+
+### Date parsing
+Special date strings.
+
+    "" / now today - Today's date/time.
+    tomorrow - 
+    yesterday - 
+    next-week - 
+    last-week - 
+    epoch - UNIX epoch, (1970-01-01 00:00:00).
 
 
 ## Examples:
@@ -267,6 +281,108 @@ Print a calendar for the week of `1967-07-01`.
 | 25 | 26 | 27 | 28 | 29 | 30 | 1 |
 +----+----+----+----+----+----+---+
 ```
+
+
+### Ranging
+Produce a set of dates from `2022-01-01 00:00:00` to `2022-01-01 10:00:00` in 1h increments.
+
+    % GoWhen parse . "2022-01-01 00:00:00" range . "2022-01-01 10:00:00" 1h
+    2022-01-01 00:00:00
+    2022-01-01 01:00:00
+    2022-01-01 02:00:00
+    2022-01-01 03:00:00
+    2022-01-01 04:00:00
+    2022-01-01 05:00:00
+    2022-01-01 06:00:00
+    2022-01-01 07:00:00
+    2022-01-01 08:00:00
+    2022-01-01 09:00:00
+
+Produce a set of dates from `2022-01-01` to `2022-01-01` in 1h increments.
+
+    % GoWhen parse . "2000-01-01" range . "2022-01-01" 365d
+    2000-01-01
+    2000-12-31
+    2001-12-31
+    2002-12-31
+    2003-12-31
+    2004-12-30
+    2005-12-30
+    2006-12-30
+    2007-12-30
+    2008-12-29
+    2009-12-29
+    2010-12-29
+    2011-12-29
+    2012-12-28
+    2013-12-28
+    2014-12-28
+    2015-12-28
+    2016-12-27
+    2017-12-27
+    2018-12-27
+    2019-12-27
+    2020-12-26
+    2021-12-26
+
+Produce a reverse set of dates from `2022-01-01 00:00:00` to `2000-01-01 00:00:00` in increments of `1 year, 2 months, 3 weeks, 4 days, 5 hours, 6 minutes and 7 seconds`.
+
+    % GoWhen parse . "2022-01-01 00:00:00"  range . "2000-01-01 00:00:00" "1y 2M 3w 4d 5h 6m 7s"
+    2022-01-01 00:00:00
+    2020-10-06 18:53:53
+    2019-07-12 13:47:46
+    2018-04-17 08:41:39
+    2017-01-23 03:35:32
+    2015-10-28 22:29:25
+    2014-08-03 17:23:18
+    2013-05-09 12:17:11
+    2012-02-13 07:11:04
+    2010-11-18 02:04:57
+    2009-08-23 20:58:50
+    2008-05-29 15:52:43
+    2007-03-04 10:46:36
+    2005-12-10 05:40:29
+    2004-09-15 00:34:22
+    2003-06-19 19:28:15
+    2002-03-25 14:22:08
+    2000-12-31 09:16:01
+
+Produce a reverse set of dates from `2000-07-01` to `UNIX epoch` in increments of `1 year` using format `2006-01-02 - Monday`.
+IE: Show days that a particular date falls on.
+
+    % GoWhen parse . "2000-07-01"  range "2006-01-02 - Monday" "epoch" 1y
+    2000-07-01 - Saturday
+    1999-07-01 - Thursday
+    1998-07-01 - Wednesday
+    1997-07-01 - Tuesday
+    1996-07-01 - Monday
+    1995-07-01 - Saturday
+    1994-07-01 - Friday
+    1993-07-01 - Thursday
+    1992-07-01 - Wednesday
+    1991-07-01 - Monday
+    1990-07-01 - Sunday
+    1989-07-01 - Saturday
+    1988-07-01 - Friday
+    1987-07-01 - Wednesday
+    1986-07-01 - Tuesday
+    1985-07-01 - Monday
+    1984-07-01 - Sunday
+    1983-07-01 - Friday
+    1982-07-01 - Thursday
+    1981-07-01 - Wednesday
+    1980-07-01 - Tuesday
+    1979-07-01 - Sunday
+    1978-07-01 - Saturday
+    1977-07-01 - Friday
+    1976-07-01 - Thursday
+    1975-07-01 - Tuesday
+    1974-07-01 - Monday
+    1973-07-01 - Sunday
+    1972-07-01 - Saturday
+    1971-07-01 - Thursday
+    1970-07-01 - Wednesday
+
 
 ### Stacking
 Parse the date `Sat 31 Jul 1967 09:42:42 AEST`, add `20 days` and print as format `20060102/20060102_150405-webcam.jpg`.

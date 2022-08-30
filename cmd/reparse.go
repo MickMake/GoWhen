@@ -2,8 +2,23 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
+	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdCron"
 	"github.com/spf13/cobra"
+)
+
+
+/*
+Examples:
+parse date "Sat 01 Jul 1967 09:42:42 AEST" add "20d" format "2006-01-02T15:04:05"
+add -- '-1y 12M -1w +7d -2h 120m -2s +2000ms' format '2006-01-02 15:04:05'
+tz "UTC" format '2006-01-02 15:04:05'
+
+*/
+
+const (
+	True = "YES"
+	False = "NO"
 )
 
 
@@ -40,7 +55,7 @@ func (cs *Cmds) ReparseArgs(cmd *cobra.Command, args []string) error {
 	return cs.Error
 }
 
-func (cs *Cmds) PopArgs1(args []string) (string, []string) {
+func (cs *Cmds) PopArg(args []string) (string, []string) {
 	if len(args) == 0 {
 		return "", args
 	}
@@ -49,7 +64,8 @@ func (cs *Cmds) PopArgs1(args []string) (string, []string) {
 
 func (cs *Cmds) PopArgs(cull int, args []string) ([]string, []string) {
 	if cull > len(args) {
-		return []string{}, args
+		args = cmdConfig.FillArray(cull, args)
+		return args, []string{}
 	}
 	if len(args) == 0 {
 		return []string{}, args

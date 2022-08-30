@@ -2,21 +2,15 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
 	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 
 //goland:noinspection GoNameStartsWithPackageName
-type CmdFormat struct {
-	Error   error
-	cmd     *cobra.Command
-	SelfCmd *cobra.Command
-}
+type CmdFormat CmdDefault
 
 
 func NewCmdFormat() *CmdFormat {
@@ -49,7 +43,7 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Format date or time."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdFormat,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -63,24 +57,16 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(1, args)
-		var arg []string
-		arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
+		var arg string
+		arg, args = cs.PopArg(args)
 		// ######################################## //
 
 
-		cs.Data.Format = cal.StrToFormat(arg[0])
+		cs.Data.Format = cal.StrToFormat(arg)
 		cs.last = true
 
 
 		// ######################################## //
-		// if cs.IsLastArg(args) {
-		// 	fmt.Printf("%s\n", cs.Data.Date.Format(arg))
-		// 	break
-		// }
 		cs.Error = cs.ReparseArgs(cmd, args)
 	}
 

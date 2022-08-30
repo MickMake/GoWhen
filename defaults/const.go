@@ -14,7 +14,7 @@ const (
 DefaultBinaryName - Extended help.
 
 ### Parsing.
-	% DefaultBinaryName parse <date/time> <format>
+	% DefaultBinaryName parse <format | .> <date/time>
 
 ### Adding
 	% DefaultBinaryName add <duration>
@@ -28,15 +28,21 @@ DefaultBinaryName - Extended help.
 	% DefaultBinaryName round down <duration>
 
 ### Formatting
-	% DefaultBinaryName format <format>
+	% DefaultBinaryName format <format | cal-year | cal-month | cal-week | .>
 
 ### Conditionals
 	% DefaultBinaryName is dst
 	% DefaultBinaryName is leap
 	% DefaultBinaryName is weekday
 	% DefaultBinaryName is weekend
-	% DefaultBinaryName is before <date/time> <format>
-	% DefaultBinaryName is after <date/time> <format>
+	% DefaultBinaryName is before <format | .> <date/time>
+	% DefaultBinaryName is after <format | .> <date/time>
+
+### Difference
+	% DefaultBinaryName diff <format | .> <date/time>
+
+### Ranging
+	% DefaultBinaryName range <format | .> <from date/time> <to date/time>
 
 
 ### Print / Parse formats
@@ -75,6 +81,15 @@ DefaultBinaryName - Extended help.
 	w - Week
 	M - Month
 	y - Year
+
+### Date parsing
+Special date strings.
+    "" / now today - Today's date/time.
+    tomorrow - 
+    yesterday - 
+    next-week - 
+    last-week - 
+    epoch - UNIX epoch, (1970-01-01 00:00:00).
 
 `
 )

@@ -2,20 +2,14 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
 	"fmt"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 
 //goland:noinspection GoNameStartsWithPackageName
-type CmdIs struct {
-	Error   error
-	cmd     *cobra.Command
-	SelfCmd *cobra.Command
-}
+type CmdIs CmdDefault
 
 
 func NewCmdIs() *CmdIs {
@@ -53,7 +47,7 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Args:                  cobra.MinimumNArgs(1),
 		}
 		cmd.AddCommand(w.SelfCmd)
-		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "date \"Sat 01 Jul 1967 09:42:42 AEST\"", "date now", "date today")
+		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "dst", "leap", "before . \"1967-07-07 09:42:42\"")
 
 		var CmdIsDst = &cobra.Command{
 			Use:                   "dst",
@@ -63,7 +57,7 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a within daylight savins time?"),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdIsDst,
 			Args:                  cobra.MinimumNArgs(0),
 		}
@@ -79,7 +73,7 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a leap year?"),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdIsLeap,
 			Args:                  cobra.MinimumNArgs(0),
 		}
@@ -95,7 +89,7 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a weekday?"),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdIsWeekday,
 			Args:                  cobra.MinimumNArgs(0),
 		}
@@ -111,7 +105,7 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a weekday?"),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdIsWeekend,
 			Args:                  cobra.MinimumNArgs(0),
 		}
@@ -120,35 +114,35 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		var CmdIsBefore = &cobra.Command{
-			Use:                   "before <date/time> <format>",
+			Use:                   "before <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
 			Short:                 fmt.Sprintf("Is parsed date before specified date?"),
 			Long:                  fmt.Sprintf("Is parsed date before specified date?"),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdIsBefore,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		w.SelfCmd.AddCommand(CmdIsBefore)
-		CmdIsBefore.Example = cmdHelp.PrintExamples(CmdIsBefore, "")
+		CmdIsBefore.Example = cmdHelp.PrintExamples(CmdIsBefore, ". \"1967-07-07 09:42:42\"")
 
 		// ******************************************************************************** //
 		var CmdIsAfter = &cobra.Command{
-			Use:                   "after <date/time> <format>",
+			Use:                   "after <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
 			Short:                 fmt.Sprintf("Is parsed date after specified date?"),
 			Long:                  fmt.Sprintf("Is parsed date after specified date?"),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdIsAfter,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		w.SelfCmd.AddCommand(CmdIsAfter)
-		CmdIsAfter.Example = cmdHelp.PrintExamples(CmdIsAfter, "")
+		CmdIsAfter.Example = cmdHelp.PrintExamples(CmdIsAfter, "UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"")
 
 	}
 
@@ -165,20 +159,15 @@ func (cs *Cmds) CmdIs(_ *cobra.Command, _ []string) error {
 
 func (cs *Cmds) CmdIsDst(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		// args = cmdConfig.FillArray(1, args)
-		// var arg string
-		// arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		if cs.Data.IsDST() {
+		if cs.Data.IsDateDST() {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
 		}
+		cs.last = true
 		cs.Data.Clear()
 
 
@@ -191,20 +180,15 @@ func (cs *Cmds) CmdIsDst(cmd *cobra.Command, args []string) error {
 
 func (cs *Cmds) CmdIsLeap(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		// args = cmdConfig.FillArray(1, args)
-		// var arg string
-		// arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		if cs.Data.IsLeap() {
+		if cs.Data.IsDateLeap() {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
 		}
+		cs.last = true
 		cs.Data.Clear()
 
 
@@ -217,20 +201,15 @@ func (cs *Cmds) CmdIsLeap(cmd *cobra.Command, args []string) error {
 
 func (cs *Cmds) CmdIsWeekday(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		// args = cmdConfig.FillArray(1, args)
-		// var arg string
-		// arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		if cs.Data.IsWeekday() {
+		if cs.Data.IsDateWeekday() {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
 		}
+		cs.last = true
 		cs.Data.Clear()
 
 
@@ -243,20 +222,15 @@ func (cs *Cmds) CmdIsWeekday(cmd *cobra.Command, args []string) error {
 
 func (cs *Cmds) CmdIsWeekend(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		// args = cmdConfig.FillArray(1, args)
-		// var arg string
-		// arg, args = cs.PopArgs(1, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		if cs.Data.IsWeekend() {
+		if cs.Data.IsDateWeekend() {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
 		}
+		cs.last = true
 		cs.Data.Clear()
 
 
@@ -269,26 +243,17 @@ func (cs *Cmds) CmdIsWeekend(cmd *cobra.Command, args []string) error {
 
 func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(2, args)
 		var arg []string
 		arg, args = cs.PopArgs(2, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		var t time.Time
-		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
-		if cs.Error != nil {
-			break
-		}
-
-		if cs.Data.Date.Before(t) {
+		if cs.Data.IsDateBefore(arg[0], arg[1]) {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
 		}
+		cs.last = true
 		cs.Data.Clear()
 
 
@@ -301,26 +266,17 @@ func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 
 func (cs *Cmds) CmdIsAfter(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(2, args)
 		var arg []string
 		arg, args = cs.PopArgs(2, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		var t time.Time
-		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
-		if cs.Error != nil {
-			break
-		}
-
-		if cs.Data.Date.After(t) {
+		if cs.Data.IsDateAfter(arg[0], arg[1]) {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
 		}
+		cs.last = true
 		cs.Data.Clear()
 
 

@@ -2,21 +2,14 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
-	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 
 //goland:noinspection GoNameStartsWithPackageName
-type CmdDiff struct {
-	Error   error
-	cmd     *cobra.Command
-	SelfCmd *cobra.Command
-}
+type CmdDiff CmdDefault
 
 
 func NewCmdDiff() *CmdDiff {
@@ -42,19 +35,19 @@ func (w *CmdDiff) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "diff <date/time> <format>",
+			Use:                   "diff <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Diff"},
 			Short:                 fmt.Sprintf("Diff date or time."),
 			Long:                  fmt.Sprintf("Diff date or time."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdDiffFormat,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		cmd.AddCommand(w.SelfCmd)
-		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "\"Sat 01 Jul 1967 09:42:42 AEST\" \"\"", "now \"\"", "today \"\"", "\"Sat Jul  1 09:42:42 UTC 1967\" UnixDate")
+		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, ". \"Sat 01 Jul 1967 09:42:42 AEST\"", ". now", ". today", "UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"")
 
 	}
 
@@ -63,22 +56,15 @@ func (w *CmdDiff) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 func (cs *Cmds) CmdDiffFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(2, args)
 		var arg []string
 		arg, args = cs.PopArgs(2, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		var t time.Time
-		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
+		cs.Error = cs.Data.DateDiff(arg[0], arg[1])
 		if cs.Error != nil {
 			break
 		}
-		d := cal.DateDiff(*cs.Data.Date, t)
-		cs.Data.SetDiff(d)
 
 
 		// ######################################## //

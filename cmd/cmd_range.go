@@ -3,20 +3,21 @@ package cmd
 import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdHelp"
+	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
 )
 
 
 //goland:noinspection GoNameStartsWithPackageName
-type CmdAdd CmdDefault
+type CmdRange CmdDefault
 
 
-func NewCmdAdd() *CmdAdd {
-	var ret *CmdAdd
+func NewCmdRange() *CmdRange {
+	var ret *CmdRange
 
 	for range Only.Once {
-		ret = &CmdAdd{
+		ret = &CmdRange{
 			Error:   nil,
 			cmd:     nil,
 			SelfCmd: nil,
@@ -26,7 +27,7 @@ func NewCmdAdd() *CmdAdd {
 	return ret
 }
 
-func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
+func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 	for range Only.Once {
 		if cmd == nil {
 			break
@@ -35,33 +36,34 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "add <duration>",
+			Use:                   "range <format> <to date/time>",
 			Aliases:               []string{},
-			Annotations:           map[string]string{"group": "Parse"},
-			Short:                 fmt.Sprintf("Add duration to date."),
-			Long:                  fmt.Sprintf("Add duration to date."),
+			Annotations:           map[string]string{"group": "Range"},
+			Short:                 fmt.Sprintf("Produce a range of dates."),
+			Long:                  fmt.Sprintf("Produce a range of dates."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
-			RunE:                  cmds.CmdAdd,
-			Args:                  cobra.MinimumNArgs(1),
+			RunE:                  cmds.CmdRange,
+			Args:                  cobra.MinimumNArgs(2),
 		}
 		cmd.AddCommand(w.SelfCmd)
-		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "30s", "7w", "1m", "-- '-1y 12M -1w +7d -2h 120m -5s'")
+		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, ". \"\" \"\"", "")
 
 	}
 
 	return w.SelfCmd
 }
 
-func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
+func (cs *Cmds) CmdRange(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		var arg string
-		arg, args = cs.PopArg(args)
+		var arg []string
+		arg, args = cs.PopArgs(3, args)
 		// ######################################## //
 
 
-		cs.Error = cs.Data.DateAdd(arg)
+		cs.Data.Format = cal.StrToFormat(arg[0])
+		cs.Error = cs.Data.DateRange(cs.Data.Format, arg[1], arg[2])
 		if cs.Error != nil {
 			break
 		}

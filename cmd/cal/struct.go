@@ -2,35 +2,39 @@ package cal
 
 import (
 	"github.com/jinzhu/now"
-	"reflect"
 	"time"
 )
 
 
-// Week have time.Time data to represent week.
-type Week []time.Time
+// New returns new Calendar pointer.
+func New(t time.Time) *Calendar {
+	return &Calendar{
+		Now: now.New(t),
+	}
+}
+
+// Now returns Calendar
+func Now() *Calendar {
+	return &Calendar{
+		Now: now.New(time.Now()),
+	}
+}
 
 // Next returns time.Time collection to represent next week.
-func (week Week) Next() (nextWeek Week) {
-	for _, t := range week {
+func (w Week) Next() (nextWeek Week) {
+	for _, t := range w {
 		nextWeek = append(nextWeek, t.AddDate(0, 0, 7))
 	}
 	return
 }
 
 // Previous returns time.Time collection to represent previous week.
-func (week Week) Previous() (previousWeek Week) {
-	for _, t := range week {
+func (w Week) Previous() (previousWeek Week) {
+	for _, t := range w {
 		previousWeek = append(previousWeek, t.AddDate(0, 0, -7))
 	}
 	return
 }
-
-// Month have Week data to represent month.
-type Month []Week
-
-// Year have Month data to represent year.
-type Year [12]Month
 
 // Calendar have now.Now data.
 type Calendar struct {
@@ -38,20 +42,20 @@ type Calendar struct {
 }
 
 // Next sets new *now.Now for next month.
-func (calendar *Calendar) Next() {
-	newDate := calendar.Now.BeginningOfMonth().AddDate(0, 1, 0)
-	calendar.Now = now.New(newDate)
+func (c *Calendar) Next() {
+	newDate := c.Now.BeginningOfMonth().AddDate(0, 1, 0)
+	c.Now = now.New(newDate)
 }
 
 // Previous sets new *now.Now for previous month.
-func (calendar *Calendar) Previous() {
-	newDate := calendar.Now.BeginningOfMonth().AddDate(0, -1, 0)
-	calendar.Now = now.New(newDate)
+func (c *Calendar) Previous() {
+	newDate := c.Now.BeginningOfMonth().AddDate(0, -1, 0)
+	c.Now = now.New(newDate)
 }
 
 // NextCalendar returns next Calendar.
-func (calendar *Calendar) NextCalendar() (nextCalendar *Calendar) {
-	newDate := calendar.Now.BeginningOfMonth().AddDate(0, 1, 0)
+func (c *Calendar) NextCalendar() (nextCalendar *Calendar) {
+	newDate := c.Now.BeginningOfMonth().AddDate(0, 1, 0)
 	nextCalendar = &Calendar{
 		Now: now.New(newDate),
 	}
@@ -59,90 +63,28 @@ func (calendar *Calendar) NextCalendar() (nextCalendar *Calendar) {
 }
 
 // PreviousCalendar returns previous Calendar.
-func (calendar *Calendar) PreviousCalendar() (previousCalendar *Calendar) {
-	newDate := calendar.Now.BeginningOfMonth().AddDate(0, -1, 0)
+func (c *Calendar) PreviousCalendar() (previousCalendar *Calendar) {
+	newDate := c.Now.BeginningOfMonth().AddDate(0, -1, 0)
 	previousCalendar = &Calendar{
 		Now: now.New(newDate),
 	}
 	return
 }
 
-// Week returns Week regarding current date.
-func (calendar *Calendar) Week() (week Week) {
-	beginningOfWeek := calendar.Now.BeginningOfWeek()
-
-	for i := 0; i < 7; i++ {
-		week = append(week, beginningOfWeek)
-		beginningOfWeek = beginningOfWeek.AddDate(0, 0, 1)
+// NextYearCalendar returns next Calendar.
+func (c *Calendar) NextYearCalendar() (nextCalendar *Calendar) {
+	newDate := c.Now.BeginningOfMonth().AddDate(1, 0, 0)
+	nextCalendar = &Calendar{
+		Now: now.New(newDate),
 	}
 	return
 }
 
-// NextWeek returns next Week regarding current date.
-// It doesn't have side effect.
-func (calendar *Calendar) NextWeek() (week Week) {
-	newDate := calendar.Now.AddDate(0, 0, 7)
-	calendar.Now = now.New(newDate)
-	defer func() {
-		calendar.Now = now.New(newDate.AddDate(0, 0, -7))
-	}()
-
-	week = calendar.Week()
-	return
-}
-
-// PreviousWeek returns previous Week regarding current date.
-// It doesn't have side effect.
-func (calendar *Calendar) PreviousWeek() (week Week) {
-	newDate := calendar.Now.AddDate(0, 0, -7)
-	calendar.Now = now.New(newDate)
-	defer func() {
-		calendar.Now = now.New(newDate.AddDate(0, 0, 7))
-	}()
-
-	week = calendar.Week()
-	return
-}
-
-// Month returns Month regarding current date.
-func (calendar *Calendar) Month() (month Month) {
-	beginningOfMonth := calendar.Now.BeginningOfMonth()
-	endOfMonth := calendar.Now.EndOfMonth()
-	week := New(beginningOfMonth).Week()
-	lastWeek := New(endOfMonth).Week()
-
-	for !reflect.DeepEqual(lastWeek, week) {
-		month = append(month, week)
-		week = week.Next()
-	}
-	month = append(month, lastWeek)
-	return
-}
-
-// NextMonth returns next Month regarding current date.
-func (calendar *Calendar) NextMonth() (month Month) {
-	month = calendar.NextCalendar().Month()
-	return
-}
-
-// PreviousMonth returns previous Month regarding current date.
-func (calendar *Calendar) PreviousMonth() (month Month) {
-	month = calendar.PreviousCalendar().Month()
-	return
-}
-
-// Year returns Year regarding current date.
-func (calendar *Calendar) Year() (year Year) {
-	var days [12]*Calendar
-	day := calendar.Now.BeginningOfYear()
-	for i := 0; i < 12; i++ {
-		days[i] = &Calendar{
-			Now: now.New(day),
-		}
-		day = day.AddDate(0, 1, 0)
-	}
-	for i, cal := range days {
-		year[i] = cal.Month()
+// PreviousYearCalendar returns previous Calendar.
+func (c *Calendar) PreviousYearCalendar() (previousCalendar *Calendar) {
+	newDate := c.Now.BeginningOfMonth().AddDate(-1, 0, 0)
+	previousCalendar = &Calendar{
+		Now: now.New(newDate),
 	}
 	return
 }

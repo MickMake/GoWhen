@@ -2,20 +2,14 @@ package cmd
 
 import (
 	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdConfig"
 	"GoWhen/Unify/cmdHelp"
 	"fmt"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 
 //goland:noinspection GoNameStartsWithPackageName
-type CmdParse struct {
-	Error   error
-	cmd     *cobra.Command
-	SelfCmd *cobra.Command
-}
+type CmdParse CmdDefault
 
 
 func NewCmdParse() *CmdParse {
@@ -41,19 +35,19 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "parse <date/time> <format>",
+			Use:                   "parse <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
 			Short:                 fmt.Sprintf("Parse date or time."),
 			Long:                  fmt.Sprintf("Parse date or time."),
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
-			PreRunE:               nil,
+			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil() },
 			RunE:                  cmds.CmdParseFormat,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		cmd.AddCommand(w.SelfCmd)
-		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "\"Sat 01 Jul 1967 09:42:42 AEST\" \"\"", "now \"\"", "today \"\"", "\"Sat Jul  1 09:42:42 UTC 1967\" UnixDate")
+		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, ". \"Sat 01 Jul 1967 09:42:42 AEST\"", ". now", ". today", "UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"")
 
 		// var CmdParseDate = &cobra.Command{
 		// 	Use:                   "date <date/time>",
@@ -152,21 +146,15 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 func (cs *Cmds) CmdParseFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		args = cmdConfig.FillArray(2, args)
 		var arg []string
 		arg, args = cs.PopArgs(2, args)
-		if cs.Data.Date == nil {
-			cs.Data.SetDate(time.Now())
-		}
 		// ######################################## //
 
 
-		var t time.Time
-		t, cs.Error = cs.Data.Parse(arg[1], arg[0])
+		cs.Error = cs.Data.DateParse(arg[0], arg[1])
 		if cs.Error != nil {
 			break
 		}
-		cs.Data.SetDate(t)
 
 
 		// ######################################## //
