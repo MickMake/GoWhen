@@ -54,15 +54,20 @@ func (d *Diff) String() string {
 
 
 type Data struct {
+	Command  string
 	Format   string
 	FromDate DateTime
 	ToDate   DateTime
 	Diff     *Diff
-	Duration *time.Duration
+	Duration *Duration
 	Range    *Duration
 }
 type DateTime struct {
 	*time.Time
+}
+
+func (d *Data) SetCmd(c string) {
+	d.Command = c
 }
 
 func (d *Data) SetFromDate(t time.Time) {
@@ -77,52 +82,12 @@ func (d *Data) SetDiff(t Diff) {
 	d.Diff = &t
 }
 
-func (d *Data) SetDuration(t time.Duration) {
+func (d *Data) SetDuration(t Duration) {
 	d.Duration = &t
 }
 
 func (d *Data) SetRange(t Duration) {
 	d.Range = &t
-}
-
-func (d *Data) DateTruncate(duration string) error {
-	var err error
-	for range Only.Once {
-		var t Duration
-		t, err = ParseDuration(duration)
-		if err != nil {
-			break
-		}
-		d.SetToDate(d.FromDate.Time.Truncate(t.Time))
-	}
-	return err
-}
-
-func (d *Data) DateRound(duration string) error {
-	var err error
-	for range Only.Once {
-		var t Duration
-		t, err = ParseDuration(duration)
-		if err != nil {
-			break
-		}
-		d.SetToDate(d.FromDate.Time.Round(t.Time))
-	}
-	return err
-}
-
-func (d *Data) DateTimezone(loc string) error {
-	var err error
-	for range Only.Once {
-		var l *time.Location
-		l, err = time.LoadLocation(loc)
-		if err != nil {
-			err = errors.New("unknown timezone '" + loc + "'")
-			break
-		}
-		d.SetToDate(d.FromDate.Time.In(l))
-	}
-	return err
 }
 
 func (d *Data) DateParse(format string, timeStr string) error {
@@ -138,18 +103,138 @@ func (d *Data) DateParse(format string, timeStr string) error {
 	return err
 }
 
+
+func (d *Data) DateTruncate(duration string) error {
+	var err error
+	for range Only.Once {
+		var dur Duration
+		dur, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		dur.Time += time.Duration(dur.Months * 30 * 24) * time.Hour
+		dur.Time += time.Duration(dur.Years * 365 * 24) * time.Hour
+
+		t := *d.FromDate.Time
+		// Truncate and round only works in UTC.
+		// So need to convert.
+		_, o := d.FromDate.Time.Zone()
+		l := d.FromDate.Time.Location()
+		if o > 0 {
+			// Convert to UTC, without the actual zone conversion.
+			t = d.FromDate.Time.UTC().Add(time.Second * time.Duration(o))
+		}
+
+		t = t.Truncate(dur.Time)
+
+		if o > 0 {
+			// Convert back to previous zone, (if there was one).
+			t = t.In(l).Add(time.Second * time.Duration(-o))
+		}
+
+		d.SetToDate(t)
+	}
+	return err
+}
+
+func (d *Data) DateRound(duration string) error {
+	var err error
+	for range Only.Once {
+		var dur Duration
+		dur, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		dur.Time += time.Duration(dur.Months * 30 * 24) * time.Hour
+		dur.Time += time.Duration(dur.Years * 365 * 24) * time.Hour
+
+		t := *d.FromDate.Time
+		// Truncate and round only works in UTC.
+		// So need to convert.
+		_, o := d.FromDate.Time.Zone()
+		l := d.FromDate.Time.Location()
+		if o > 0 {
+			// Convert to UTC, without the actual zone conversion.
+			t = d.FromDate.Time.UTC().Add(time.Second * time.Duration(o))
+		}
+
+		t = t.Round(dur.Time)
+
+		if o > 0 {
+			// Convert back to previous zone, (if there was one).
+			t = t.In(l).Add(time.Second * time.Duration(-o))
+		}
+
+		d.SetToDate(t)
+	}
+	return err
+}
+
+func (d *Data) DateTimezone(loc string) error {
+	var err error
+	for range Only.Once {
+		if (loc == "") || (loc == ".") {
+			// Strip zone info if empty.
+
+			// _, o := d.FromDate.Time.Zone()
+			// fmt.Println(o)
+			// l, _ := time.LoadLocation("Australia/Sydney")
+			// fmt.Println(l.String())
+			// _, o = d.FromDate.Time.Zone()
+			// fmt.Println(o)
+
+			_, o := d.FromDate.Time.Zone()
+			// fmt.Printf("ZONE: %v\n", o)
+			t := d.FromDate.Time.UTC().Add(time.Second * time.Duration(o))
+			d.FromDate.Time = &t
+			break
+		}
+
+		var l *time.Location
+		l, err = time.LoadLocation(loc)
+		if err != nil {
+			err = errors.New("unknown timezone '" + loc + "'")
+			break
+		}
+		t := d.FromDate.Time.In(l)
+		d.SetToDate(t)
+	}
+	return err
+}
+
+// DateAdd - SetDuration / SetToDate
+func (d *Data) DateAdd(duration string) error {
+	var err error
+	for range Only.Once {
+		var dur Duration
+		dur, err = ParseDuration(duration)
+		if err != nil {
+			break
+		}
+		d.SetDuration(dur)
+		t := d.FromDate.AddDate(int(dur.Years), int(dur.Months), 0)
+		t = t.Add(dur.Time)
+		// d.SetFromDate(t)
+		d.SetToDate(t)
+	}
+	return err
+}
+
+
 // DateRange - SetToDate
 func (d *Data) DateRange(format string, toStr string, duration string) error {
 	var err error
 	for range Only.Once {
 		d.Format = format
 
-		var t time.Time
-		t, err = d.ParseDateString(format, toStr)
-		if err != nil {
-			break
+		if (d.ToDate.Time == nil) || (toStr != "") {
+			var t time.Time
+			t, err = d.ParseDateString(format, toStr)
+			if err != nil {
+				break
+			}
+			d.SetToDate(t)
 		}
-		d.SetToDate(t)
 
 		var td Duration
 		td, err = ParseDuration(duration)
@@ -177,22 +262,6 @@ func (d *Data) DateDiff(format string, timeStr string) error {
 	return err
 }
 
-// DateAdd - SetDuration / SetToDate
-func (d *Data) DateAdd(duration string) error {
-	var err error
-	for range Only.Once {
-		var dur Duration
-		dur, err = ParseDuration(duration)
-		if err != nil {
-			break
-		}
-		d.SetDuration(dur.Time)
-		t := d.FromDate.AddDate(int(dur.Years), int(dur.Months), 0)
-		t = t.Add(dur.Time)
-		d.SetToDate(t)
-	}
-	return err
-}
 
 func (d *Data) IsDateNil() bool {
 	if d.FromDate.Time == nil {
@@ -324,16 +393,27 @@ func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error)
 	var err error
 
 	for range Only.Once {
+		format = StrToFormat(format)
+		if format != "" {
+			d.Format = format
+		}
+
+		if timeStr == "." {
+			timeStr = ""
+		}
+		if (d.ToDate.Time != nil) && (timeStr == "") {
+			t = *d.ToDate.Time
+			break
+		}
+
 		t2 := StrToDate(timeStr)
 		if t2 != nil {
 			t = *t2
 			break
 		}
-		format = StrToFormat(format)
 
 		// If we have defined a specific format.
-		if format != "" {
-			d.Format = format
+		if d.Format != "" {
 			t, err = time.Parse(format, timeStr)
 			if err != nil {
 				break
@@ -378,61 +458,26 @@ func (d *Data) Print() {
 			break
 		}
 
-		if d.Duration != nil {
-			d.PrintDuration()
-			break
-		}
+		// if d.Duration != nil {
+		// 	d.PrintDuration()
+		// 	break
+		// }
 
 		if d.ToDate.Time != nil {
-			d.PrintDate()
+			d.PrintToDate()
 			break
 		}
 
 		if d.FromDate.Time != nil {
-			d.PrintDate()
+			d.PrintFromDate()
 			break
 		}
 	}
 }
 
-func (d *Data) PrintDate() {
+func (d *Data) PrintFromDate() {
 	for range Only.Once {
 		if d.FromDate.Time == nil {
-			break
-		}
-
-		if d.Format == "epoch" {
-			fmt.Printf("%d\n", d.FromDate.Time.Unix())
-			break
-		}
-
-		if d.Format == "week" {
-			_, w := d.FromDate.Time.ISOWeek()
-			fmt.Printf("%d\n", w)
-			break
-		}
-
-		if d.Format == "list" {
-			m := New(*d.FromDate.Time).Week()
-			m.Print()
-			break
-		}
-
-		if d.Format == "cal-week" {
-			m := New(*d.FromDate.Time).Week()
-			m.Print()
-			break
-		}
-
-		if d.Format == "cal-month" {
-			m := New(*d.FromDate.Time).Month()
-			m.Print()
-			break
-		}
-
-		if d.Format == "cal-year" {
-			y := New(*d.FromDate.Time).Year()
-			y.Print()
 			break
 		}
 
@@ -443,12 +488,60 @@ func (d *Data) PrintDate() {
 	}
 }
 
+func (d *Data) PrintToDate() {
+	for range Only.Once {
+		if d.ToDate.Time == nil {
+			break
+		}
+
+		if d.Format == "epoch" {
+			fmt.Printf("%d\n", d.FromDate.Time.Unix())
+			break
+		}
+
+		if d.Format == "week" {
+			_, w := d.ToDate.Time.ISOWeek()
+			fmt.Printf("%d\n", w)
+			break
+		}
+
+		if d.Format == "list" {
+			m := New(*d.ToDate.Time).Week()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-week" {
+			m := New(*d.ToDate.Time).Week()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-month" {
+			m := New(*d.ToDate.Time).Month()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-year" {
+			y := New(*d.ToDate.Time).Year()
+			y.Print()
+			break
+		}
+
+		if d.Format == "" {
+			d.Format = time.RFC3339Nano
+		}
+		fmt.Printf("%s\n", d.ToDate.Time.Format(d.Format))
+	}
+}
+
 func (d *Data) PrintDuration() {
 	for range Only.Once {
 		if d.Duration == nil {
 			break
 		}
-		fmt.Println(d.Duration.String())
+		fmt.Printf("%dy %dM %s\n", d.Duration.Years, d.Duration.Months, d.Duration.Time.String())
 	}
 }
 
@@ -493,6 +586,7 @@ func (d *Data) PrintRange() {
 				break
 			}
 			lt = t
+
 		}
 	}
 }

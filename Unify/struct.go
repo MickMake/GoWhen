@@ -16,6 +16,7 @@ import (
 	"GoWhen/Unify/cmdHelp"
 	"GoWhen/Unify/cmdVersion"
 	"GoWhen/defaults"
+	"errors"
 	"fmt"
 	cc "github.com/ivanpirog/coloredcobra"
 	"github.com/spf13/cobra"
@@ -58,7 +59,7 @@ func (u *Unify) InitCmds() error {
 			Use:              u.Options.BinaryName,
 			Short:            fmt.Sprintf("%s - %s", u.Options.BinaryName, u.Options.Description),
 			Long:             fmt.Sprintf("%s - %s", u.Options.BinaryName, u.Options.Description),
-			Run:              CmdRoot,
+			RunE:             CmdRoot,
 			TraverseChildren: true,
 		}
 		u.Commands.CmdRoot.Example = cmdHelp.PrintExamples(u.Commands.CmdRoot, "")
@@ -181,13 +182,13 @@ func (u *Unify) ReadConfig() error {
 }
 
 // CmdRoot -
-func CmdRoot(cmd *cobra.Command, args []string) {
+func CmdRoot(cmd *cobra.Command, args []string) error {
+	var err error
 	for range Only.Once {
-		if len(args) == 0 {
-			_ = cmd.Help()
-			break
-		}
+		// _ = cmd.Help()
+		err = errors.New(fmt.Sprintf("Unknown command string: %v\n", args))
 	}
+	return err
 }
 
 type Unify struct {

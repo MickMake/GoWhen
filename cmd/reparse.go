@@ -24,21 +24,18 @@ const (
 
 func (cs *Cmds) ReparseArgs(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		// args = args[cull:]
+		// f := ""
+		// if cmds.Data.FromDate.Time != nil {
+		// 	f = cmds.Data.FromDate.Time.Format(time.RFC3339)
+		// }
+		// t := ""
+		// if cmds.Data.ToDate.Time != nil {
+		// 	t = cmds.Data.ToDate.Time.Format(time.RFC3339)
+		// }
+		// fmt.Printf("%s(%s): FromDate: %s\tToDate: %s\n", cs.Data.Command, cs.Data.Format, f, t)
+
 		if (len(args) == 0) || (cs.last) {
 			cs.Data.Print()
-			// switch {
-			// 	case cs.Data.Date != nil:
-			// 		if cs.Data.format == "epoch" {
-			// 			break
-			// 		}
-			// 		if cs.Data.format == "" {
-			// 			cs.Data.format = time.RFC3339Nano
-			// 		}
-			// 		fmt.Printf("%s\n", cs.Data.Date.Format(cs.Data.format))
-			// 	case cs.Data.Duration != nil:
-			// 		fmt.Printf("%s\n", cs.Data.Duration.String())
-			// }
 			break
 		}
 

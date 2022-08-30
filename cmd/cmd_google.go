@@ -55,7 +55,7 @@ func (w *CmdGoogle) AttachCommands(cmd *cobra.Command) *cobra.Command {
 			Aliases:               []string{},
 			Short:                 fmt.Sprintf("Update and view Google sheets."),
 			Long:                  fmt.Sprintf("Update and view Google sheets."),
-			DisableFlagParsing:    false,
+			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
 			PreRunE:               w.InitArgs,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -73,7 +73,7 @@ func (w *CmdGoogle) AttachCommands(cmd *cobra.Command) *cobra.Command {
 			Aliases:               []string{"refresh"},
 			Short:                 fmt.Sprintf("Update Google sheets."),
 			Long:                  fmt.Sprintf("Update Google sheets."),
-			DisableFlagParsing:    false,
+			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
 			PreRunE:               w.InitArgs,
 			Run:                   w.CmdGoogleUpdate,

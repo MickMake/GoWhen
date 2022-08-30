@@ -44,7 +44,7 @@ func (w *CmdExamples) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Annotations:           map[string]string{"group": "Examples"},
 			Short:                 fmt.Sprintf("Examples."),
 			Long:                  fmt.Sprintf("Examples."),
-			DisableFlagParsing:    false,
+			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
 			PreRunE:               nil,
 			RunE:                  cmds.CmdExamples,
@@ -139,6 +139,16 @@ Show difference between "now" and "2022-02-01 00:00:00".
 Show difference between "2022-02-01 00:00:00" and "now".
     % GoWhen parse "2020-01-01 00:00:00" . diff now .
     2y 7M 28d 8h 19m 36s
+
+
+### Conditionals
+Is the date "1967-07-07 09:42:42" after "1967-07-01 09:42:42"
+    % GoWhen parse . "1967-07-01 09:42:42"   is after . "1967-07-07 09:42:42"
+    NO
+
+Is the date "1967-07-01 09:42:42" before "1967-07-07 09:42:42"
+    % GoWhen parse . "1967-07-01 09:42:42"   is before . "1967-07-07 09:42:42"
+    YES
 
 
 ### Formatting

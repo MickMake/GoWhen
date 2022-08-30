@@ -13,36 +13,31 @@ const (
 	HelpTemplate = `
 DefaultBinaryName - Extended help.
 
-### Parsing.
-	% DefaultBinaryName parse <format | .> <date/time>
+### Input
+	% GoWhen parse <format | .> <date/time>
 
-### Adding
-	% DefaultBinaryName add <duration>
+### Modify
+	% GoWhen add <duration>
 
-### Timezones
-	% DefaultBinaryName timezone <zone>
-	% DefaultBinaryName tz <zone>
+	% GoWhen timezone <zone>
+	% GoWhen tz <zone>
 
-### Rounding
-	% DefaultBinaryName round up <duration>
-	% DefaultBinaryName round down <duration>
+	% GoWhen round up <duration>
+	% GoWhen round down <duration>
 
-### Formatting
-	% DefaultBinaryName format <format | cal-year | cal-month | cal-week | .>
+### Output
+	% GoWhen format <format | cal-year | cal-month | cal-week | .>
 
-### Conditionals
-	% DefaultBinaryName is dst
-	% DefaultBinaryName is leap
-	% DefaultBinaryName is weekday
-	% DefaultBinaryName is weekend
-	% DefaultBinaryName is before <format | .> <date/time>
-	% DefaultBinaryName is after <format | .> <date/time>
+	% GoWhen is dst
+	% GoWhen is leap
+	% GoWhen is weekday
+	% GoWhen is weekend
+	% GoWhen is before <format | .> <date/time>
+	% GoWhen is after <format | .> <date/time>
 
-### Difference
-	% DefaultBinaryName diff <format | .> <date/time>
+	% GoWhen diff <format | .> <date/time>
 
-### Ranging
-	% DefaultBinaryName range <format | .> <from date/time> <to date/time>
+	% GoWhen range <format | .> <to date/time> <duration>
 
 
 ### Print / Parse formats
