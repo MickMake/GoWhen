@@ -6,6 +6,7 @@ require (
 	github.com/acarl005/textcol v0.0.0
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/blang/semver v3.5.1+incompatible
+	github.com/davecgh/go-spew v1.1.1
 	github.com/go-co-op/gocron v1.11.0
 	github.com/google/go-github/v30 v30.1.0
 	github.com/ivanpirog/coloredcobra v1.0.1

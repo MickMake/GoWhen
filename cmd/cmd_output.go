@@ -3,7 +3,6 @@ package cmd
 import (
 	"GoWhen/Unify/Only"
 	"GoWhen/Unify/cmdHelp"
-	"GoWhen/cmd/cal"
 	"fmt"
 	"github.com/spf13/cobra"
 )
@@ -42,7 +41,7 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Format date or time."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("format") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdFormat,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -64,7 +63,7 @@ func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		cs.Data.Format = cal.StrToFormat(arg)
+		cs.Data.ConvertFormat(arg)
 		cs.last = true
 
 
@@ -109,7 +108,7 @@ func (w *CmdDiff) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Diff date or time."),
 			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("diff") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdDiffFormat,
 			Args:                  cobra.MinimumNArgs(2),
 		}
@@ -181,7 +180,7 @@ func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Produce a range of dates."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("range") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdRange,
 			Args:                  cobra.MinimumNArgs(2),
 		}
@@ -190,6 +189,8 @@ func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			". tomorrow 5m",
 			"\"2006-01-02 - Monday\" \"now\" 1y",
 			". \"2022-01-01 00:00:00\" \"1y 2M 3w 4d 5h 6m 7s\"",
+			"'%F %T' '1967-07-01 09:00:00'",
+			"'yyyy-MM-dd HH:mm:ss' '2022-12-31 09:00:00'\"",
 			)
 
 	}
@@ -205,8 +206,7 @@ func (cs *Cmds) CmdRange(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		cs.Data.Format = cal.StrToFormat(arg[0])
-		cs.Error = cs.Data.DateRange(cs.Data.Format, arg[1], arg[2])
+		cs.Error = cs.Data.DateRange(arg[0], arg[1], arg[2])
 		if cs.Error != nil {
 			break
 		}
@@ -254,12 +254,18 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date or time."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIs,
 			Args:                  cobra.MinimumNArgs(1),
 		}
 		cmd.AddCommand(w.SelfCmd)
-		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd, "dst", "leap", "before . \"1967-07-07 09:42:42\"")
+		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd,
+			"dst",
+			"leap",
+			"before . \"1967-07-07 09:42:42\"",
+			"after '%F %T' '1967-07-01 09:00:00'",
+			"before 'yyyy-MM-dd HH:mm:ss' '2022-12-31 09:00:00'\"",
+			)
 
 		var CmdIsDst = &cobra.Command{
 			Use:                   "dst",
@@ -269,12 +275,14 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a within daylight savins time?"),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is dst") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIsDst,
 			Args:                  cobra.MinimumNArgs(0),
 		}
 		w.SelfCmd.AddCommand(CmdIsDst)
-		CmdIsDst.Example = cmdHelp.PrintExamples(CmdIsDst, "")
+		CmdIsDst.Example = cmdHelp.PrintExamples(CmdIsDst,
+			"",
+		)
 
 		// ******************************************************************************** //
 		var CmdIsLeap = &cobra.Command{
@@ -285,12 +293,14 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a leap year?"),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is leap") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIsLeap,
 			Args:                  cobra.MinimumNArgs(0),
 		}
 		w.SelfCmd.AddCommand(CmdIsLeap)
-		CmdIsLeap.Example = cmdHelp.PrintExamples(CmdIsLeap, "")
+		CmdIsLeap.Example = cmdHelp.PrintExamples(CmdIsLeap,
+			"",
+		)
 
 		// ******************************************************************************** //
 		var CmdIsWeekday = &cobra.Command{
@@ -301,12 +311,14 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a weekday?"),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is weekday") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIsWeekday,
 			Args:                  cobra.MinimumNArgs(0),
 		}
 		w.SelfCmd.AddCommand(CmdIsWeekday)
-		CmdIsWeekday.Example = cmdHelp.PrintExamples(CmdIsWeekday, "")
+		CmdIsWeekday.Example = cmdHelp.PrintExamples(CmdIsWeekday,
+			"",
+		)
 
 		// ******************************************************************************** //
 		var CmdIsWeekend = &cobra.Command{
@@ -317,12 +329,14 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is date a weekday?"),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is workday") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIsWeekend,
 			Args:                  cobra.MinimumNArgs(0),
 		}
 		w.SelfCmd.AddCommand(CmdIsWeekend)
-		CmdIsWeekend.Example = cmdHelp.PrintExamples(CmdIsWeekend, "")
+		CmdIsWeekend.Example = cmdHelp.PrintExamples(CmdIsWeekend,
+			"",
+			)
 
 		// ******************************************************************************** //
 		var CmdIsBefore = &cobra.Command{
@@ -333,12 +347,16 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is parsed date before specified date?"),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is before") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIsBefore,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		w.SelfCmd.AddCommand(CmdIsBefore)
-		CmdIsBefore.Example = cmdHelp.PrintExamples(CmdIsBefore, ". \"1967-07-07 09:42:42\"")
+		CmdIsBefore.Example = cmdHelp.PrintExamples(CmdIsBefore,
+			". \"1967-07-07 09:42:42\"",
+			"'%F %T' '1967-07-01 09:00:00'",
+			"'yyyy-MM-dd HH:mm:ss' '2022-12-31 09:00:00'\"",
+			)
 
 		// ******************************************************************************** //
 		var CmdIsAfter = &cobra.Command{
@@ -349,12 +367,16 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Is parsed date after specified date?"),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("is after") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdIsAfter,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		w.SelfCmd.AddCommand(CmdIsAfter)
-		CmdIsAfter.Example = cmdHelp.PrintExamples(CmdIsAfter, "UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"")
+		CmdIsAfter.Example = cmdHelp.PrintExamples(CmdIsAfter,
+			"UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"",
+			"'%F %T' '1967-07-01 09:00:00'",
+			"'yyyy-MM-dd HH:mm:ss' '2022-12-31 09:00:00'\"",
+			)
 
 	}
 

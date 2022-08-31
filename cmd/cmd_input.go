@@ -41,17 +41,21 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Parse date or time."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("parse") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdParse,
 			Args:                  cobra.MinimumNArgs(2),
 		}
 		cmd.AddCommand(w.SelfCmd)
 		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd,
-			". \"Sat 01 Jul 1967 09:42:42 AEST\"",
-			". now",
+			"2006-01-02T15:04:05 now",
+			"RFC3339 .",
 			". today",
+			"\"2006-01-02 15:04:05\" yesterday",
+			". tomorrow",
 			"UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"",
 			". \"1967-07-01\"",
+			"'%F %T' '1967-07-01 09:00:00'",
+			"'yyyy-MM-dd HH:mm:ss' '2022-12-31 09:00:00'\"",
 			)
 
 	}

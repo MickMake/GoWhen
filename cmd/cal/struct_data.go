@@ -54,8 +54,16 @@ func (d *Diff) String() string {
 
 
 type Data struct {
-	Command  string
-	Format   string
+	Command    string
+	Format     string
+
+	Convert    *Convert
+	JavaFormat bool
+	CppFormat  bool
+	GoFormat   bool
+	// FormatType []string
+	FormatType string
+
 	FromDate DateTime
 	ToDate   DateTime
 	Diff     *Diff
@@ -64,6 +72,22 @@ type Data struct {
 }
 type DateTime struct {
 	*time.Time
+}
+
+func (d *Data) ConvertFormat(format string) {
+	for range Only.Once {
+		format = StrToFormat(format)
+
+		if d.JavaFormat {
+			d.Format = d.Convert.FromJava(format)
+			break
+		}
+
+		if d.CppFormat {
+			d.Format = d.Convert.FromCpp(format)
+			break
+		}
+	}
 }
 
 func (d *Data) SetCmd(c string) {
@@ -93,8 +117,10 @@ func (d *Data) SetRange(t Duration) {
 func (d *Data) DateParse(format string, timeStr string) error {
 	var err error
 	for range Only.Once {
+		d.ConvertFormat(format)
+
 		var t time.Time
-		t, err = d.ParseDateString(format, timeStr)
+		t, err = d.ParseDateString(d.Format, timeStr)
 		if err != nil {
 			break
 		}
@@ -175,16 +201,7 @@ func (d *Data) DateTimezone(loc string) error {
 	for range Only.Once {
 		if (loc == "") || (loc == ".") {
 			// Strip zone info if empty.
-
-			// _, o := d.FromDate.Time.Zone()
-			// fmt.Println(o)
-			// l, _ := time.LoadLocation("Australia/Sydney")
-			// fmt.Println(l.String())
-			// _, o = d.FromDate.Time.Zone()
-			// fmt.Println(o)
-
 			_, o := d.FromDate.Time.Zone()
-			// fmt.Printf("ZONE: %v\n", o)
 			t := d.FromDate.Time.UTC().Add(time.Second * time.Duration(o))
 			d.FromDate.Time = &t
 			break
@@ -225,11 +242,11 @@ func (d *Data) DateAdd(duration string) error {
 func (d *Data) DateRange(format string, toStr string, duration string) error {
 	var err error
 	for range Only.Once {
-		d.Format = format
+		d.ConvertFormat(format)
 
 		if (d.ToDate.Time == nil) || (toStr != "") {
 			var t time.Time
-			t, err = d.ParseDateString(format, toStr)
+			t, err = d.ParseDateString(d.Format, toStr)
 			if err != nil {
 				break
 			}
@@ -250,8 +267,10 @@ func (d *Data) DateRange(format string, toStr string, duration string) error {
 func (d *Data) DateDiff(format string, timeStr string) error {
 	var err error
 	for range Only.Once {
+		d.ConvertFormat(format)
+
 		var t time.Time
-		t, err = d.ParseDateString(format, timeStr)
+		t, err = d.ParseDateString(d.Format, timeStr)
 		if err != nil {
 			break
 		}
@@ -311,7 +330,9 @@ func (d *Data) IsDateDST() bool {
 func (d *Data) IsDateBefore(format string, timeStr string) bool {
 	var yes bool
 	for range Only.Once {
-		t, err := d.ParseDateString(format, timeStr)
+		d.ConvertFormat(format)
+
+		t, err := d.ParseDateString(d.Format, timeStr)
 		if err != nil {
 			break
 		}
@@ -327,7 +348,9 @@ func (d *Data) IsDateBefore(format string, timeStr string) bool {
 func (d *Data) IsDateAfter(format string, timeStr string) bool {
 	var yes bool
 	for range Only.Once {
-		t, err := d.ParseDateString(format, timeStr)
+		d.ConvertFormat(format)
+
+		t, err := d.ParseDateString(d.Format, timeStr)
 		if err != nil {
 			break
 		}
@@ -393,9 +416,8 @@ func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error)
 	var err error
 
 	for range Only.Once {
-		format = StrToFormat(format)
 		if format != "" {
-			d.Format = format
+			d.ConvertFormat(format)
 		}
 
 		if timeStr == "." {
@@ -415,16 +437,15 @@ func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error)
 		// If we have defined a specific format.
 		if d.Format != "" {
 			t, err = time.Parse(format, timeStr)
-			if err != nil {
+			if err == nil {
 				break
 			}
-			break
 		}
 
 		// See if we can auto-discover the format.
 		format, err = dateparse.ParseFormat(timeStr)
 		if err == nil {
-			d.Format = format
+			d.Format = format	// Will be in GoLang layout format.
 			t, err = time.Parse(format, timeStr)
 			break
 		}

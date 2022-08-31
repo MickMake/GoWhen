@@ -21,6 +21,7 @@ type Cmds struct {
 	Diff     *CmdDiff
 	Range    *CmdRange
 	Examples *CmdExamples
+	Convert  *CmdConvert
 
 	last  bool
 	Data  cal.Data
@@ -81,6 +82,17 @@ func init() {
 
 		cmds.Range = NewCmdRange()
 		cmds.Range.AttachCommand(cmdRoot)
+
+		cmds.Convert = NewCmdConvert()
+		cmds.Convert.AttachCommand(cmdRoot)
+
+
+		cmds.Data.GoFormat = true
+		cmds.Data.CppFormat = false
+		cmds.Data.JavaFormat = false
+
+
+		cmds.AttachFlags(cmdRoot, cmds.Unify.GetViper())
 
 		// cmds.Google = NewCmdGoogle()
 		// cmds.Google.AttachCommands(cmdRoot)

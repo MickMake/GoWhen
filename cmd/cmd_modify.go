@@ -41,7 +41,7 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Add duration to date."),
 			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("add") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdAdd,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -113,7 +113,7 @@ func (w *CmdTimezone) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Adjust date/time by timezone."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("timezone") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdTimezone,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -183,7 +183,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Round up/down date/time."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("round") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdRound,
 			Args:                  cobra.MinimumNArgs(2),
 		}
@@ -204,7 +204,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Round up date/time."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("round up") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdRoundUp,
 			Args:                  cobra.MinimumNArgs(1),
 		}
@@ -223,7 +223,7 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Long:                  fmt.Sprintf("Round down date/time."),
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
-			PreRun:                func(cmd *cobra.Command, args []string) { cmds.Data.SetDateIfNil(); cmds.Data.SetCmd("round down") },
+			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdRoundDown,
 			Args:                  cobra.MinimumNArgs(1),
 		}

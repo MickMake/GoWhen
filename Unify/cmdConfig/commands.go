@@ -96,6 +96,11 @@ func (c *Config) CmdWrite(_ *cobra.Command, args []string) error {
 			}
 		}
 
+		c.Error = c.UpdateFlags()
+		if c.Error != nil {
+			break
+		}
+
 		_, _ = fmt.Fprintf(os.Stderr, "Using config file '%s'\n", c.viper.ConfigFileUsed())
 		fmt.Println("New config:")
 		cmdHelp.PrintConfig(c.cmd, c.EnvPrefix)

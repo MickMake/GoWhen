@@ -182,7 +182,7 @@ func (u *Unify) ReadConfig() error {
 }
 
 // CmdRoot -
-func CmdRoot(cmd *cobra.Command, args []string) error {
+func CmdRoot(_ *cobra.Command, args []string) error {
 	var err error
 	for range Only.Once {
 		// _ = cmd.Help()

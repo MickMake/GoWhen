@@ -70,8 +70,8 @@ const (
 	Examples = `
 ### Parsing.
 Parse the date string "Sat 01 Jul 1967 09:42:42 AEST".
-    % GoWhen parse "Sat 31 Jul 1967 09:42:42 AEST" ""
-    1967-07-31T09:42:42+10:00
+    % GoWhen parse "Sat 01 Jul 1967 09:42:42 AEST" ""
+    1967-07-01T09:42:42+10:00
 
 Parse the date string "1967-07-01 09:42:42" with custom format "2006-01-02 15:04:05".
     % GoWhen parse "1967-07-01 09:42:42" "2006-01-02 15:04:05"
@@ -268,11 +268,11 @@ IE: Show days that a particular date falls on.
 
 
 ### Stacking
-Parse the date "Sat 31 Jul 1967 09:42:42 AEST", add "20 days" and print as format "20060102/20060102_150405-webcam.jpg".
-    % GoWhen parse "Sat 31 Jul 1967 09:42:42 AEST" ""  add "20d"  format "20060102/20060102_150405-webcam.jpg"
+Parse the date "Sat 01 Jul 1967 09:42:42 AEST", add "20 days" and print as format "20060102/20060102_150405-webcam.jpg".
+    % GoWhen parse "Sat 01 Jul 1967 09:42:42 AEST" ""  add "20d"  format "20060102/20060102_150405-webcam.jpg"
     19670820/19670820_094242-webcam.jpg
 
-Parse the date "Sat 31 Jul 1967 09:42:42 AEST", convert to timezone "Iceland", add "1 day", round down to every "5 minutes" and print as format "2006-01-02 15:04:05".
+Parse the date "Sat 01 Jul 1967 09:42:42 AEST", convert to timezone "Iceland", add "1 day", round down to every "5 minutes" and print as format "2006-01-02 15:04:05".
     % GoWhen parse "1967-07-01 09:42:42" ""  timezone Iceland  add 1d  round down 5m  format "2006-01-02 15:04:05"
     1967-07-02 09:40:00
 
