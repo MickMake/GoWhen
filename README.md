@@ -17,9 +17,7 @@ This tool does several things:
 - diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats.
 - range - Produce a range of dates with variable duration span between.
-
-What is planned for future releases:
-- Support for more parse formats, (Java and C).
+- Support for more parse formats, (Java and C), using a simple JSON mapping file.
 
 Also, since it's based on my Unify package, it has support for self-updating.
 
@@ -52,6 +50,66 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	% GoWhen diff <format> <date/time>
 
 	% GoWhen range <format> <to date/time> <duration>
+
+
+## Quick start
+Impatient? OK, so am I. Here's some things you can do with `GoWhen`.
+
+Parse today's date and add `-1 year, +12 months, -1 week, +7 days, -2 hours, +120 minutes, -2 seconds, +2000 mS`.
+
+	% GoWhen add "-1y 12M -1w +7d -2h 120m -2s +2000ms"
+    2022-08-29T06:38:36.73375+10:00
+
+Show difference between "2022-02-01 00:00:00" and "now".
+
+    % GoWhen parse . "2020-01-01 00:00:00"  diff . now
+    2y 7M 28d 8h 19m 36s
+
+Produce a reverse set of dates from `2010-01-01 00:00:00` to `2000-01-01 00:00:00` in increments of `1 year, 2 months, 3 weeks, 4 days, 5 hours, 6 minutes and 7 seconds`.
+
+    % GoWhen parse . "2010-01-01 00:00:00"  range . "2000-01-01 00:00:00" "1y 2M 3w 4d 5h 6m 7s"
+    2010-01-01 00:00:00
+    2008-10-06 18:53:53
+    2007-07-12 13:47:46
+    2006-04-17 08:41:39
+    2005-01-23 03:35:32
+    2003-10-28 22:29:25
+    2002-08-03 17:23:18
+    2001-05-09 12:17:11
+    2000-02-13 07:11:04
+
+Parse the date `01 Jul 1967 09:42:42 AEST`, convert to timezone `Iceland`, add `1 day`, round down to every `30 minutes` and print as format `ANSIC`, (`Mon Jan _2 15:04:05 2006`).
+
+	% GoWhen parse . "01 Jul 1967 09:42:42 AEST"   timezone Iceland  add 1d  round down 30m  format ANSIC
+    1967-07-02 09:40:00
+
+Show the difference between two dates, `1920-09-08` and `2023-07-01`.
+
+    % GoWhen parse . 1920-09-08 diff . 2023-07-01
+    102y 9M 23d
+
+Or in reverse...
+
+    % GoWhen parse . 1920-09-08 add "102y 9M 23d"
+    2023-07-01
+
+Produce a list of files with names based on `%Y%m%d_%H%M%S-webcam.jpg` from `01 Jul 1967 09:42:42 AEST` until `1 week` in `half day` increments.
+
+    % GoWhen parse . "01 Jul 1967 09:42:42 AEST"   add "1w"  range "%Y%m%d_%H%M%S-webcam.jpg" . .5d
+    19670701_094242-webcam.jpg
+    19670701_214242-webcam.jpg
+    19670801_094242-webcam.jpg
+    19670801_214242-webcam.jpg
+    19670802_094242-webcam.jpg
+    19670802_214242-webcam.jpg
+    19670803_094242-webcam.jpg
+    19670803_214242-webcam.jpg
+    19670804_094242-webcam.jpg
+    19670804_214242-webcam.jpg
+    19670805_094242-webcam.jpg
+    19670805_214242-webcam.jpg
+    19670806_094242-webcam.jpg
+    19670806_214242-webcam.jpg
 
 
 ## Formats
@@ -216,8 +274,8 @@ The default mapping is as follows.
 ### Parsing.
 Parse the date string `Sat 01 Jul 1967 09:42:42 AEST`.
 
-	% GoWhen parse . "Sat 31 Jul 1967 09:42:42 AEST"
-    1967-07-31T09:42:42+10:00
+	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"
+    1967-07-01T09:42:42+10:00
 
 Parse the date string `1967-07-01 09:42:42` with custom format `2006-01-02 15:04:05`.
 
@@ -499,14 +557,14 @@ IE: Show days that a particular date falls on.
 
 
 ### Stacking
-Parse the date `Sat 31 Jul 1967 09:42:42 AEST`, add `20 days` and print as format `20060102/20060102_150405-webcam.jpg`.
+Parse the date `Sat 01 Jul 1967 09:42:42 AEST`, add `20 days` and print as format `20060102/20060102_150405-webcam.jpg`.
 
-	% GoWhen parse . "Sat 31 Jul 1967 09:42:42 AEST"   add "20d"  format "20060102/20060102_150405-webcam.jpg"
+	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"   add "20d"  format "20060102/20060102_150405-webcam.jpg"
     19670820/19670820_094242-webcam.jpg
 
-Parse the date `Sat 31 Jul 1967 09:42:42 AEST`, convert to timezone `Iceland`, add `1 day`, round down to every `5 minutes` and print as format `2006-01-02 15:04:05`.
+Parse the date `Sat 01 Jul 1967 09:42:42 AEST`, convert to timezone `Iceland`, add `1 day`, round down to every `5 minutes` and print as format `2006-01-02 15:04:05`.
 
-	% GoWhen parse . "1967-07-01 09:42:42"   timezone Iceland  add 1d  round down 5m  format "2006-01-02 15:04:05"
+	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"   timezone Iceland  add 1d  round down 5m  format "2006-01-02 15:04:05"
     1967-07-02 09:40:00
 
 Is the date `1967-07-07 09:42:42` after `1967-07-01 09:42:42`
