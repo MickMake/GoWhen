@@ -28,7 +28,7 @@ Also, since it's based on my Unify package, it has support for self-updating.
 Note: all commands are stackable. Except `format` and `is` - doesn't make any sense to make them stackable.
 
 ### Date input
-	% GoWhen parse <format | .> <date/time>
+	% GoWhen parse <format> <date/time>
 
 ### Date modify
 	% GoWhen add <duration>
@@ -46,12 +46,12 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	% GoWhen is leap
 	% GoWhen is weekday
 	% GoWhen is weekend
-	% GoWhen is before <format | .> <date/time>
-	% GoWhen is after <format | .> <date/time>
+	% GoWhen is before <format> <date/time>
+	% GoWhen is after <format> <date/time>
 
-	% GoWhen diff <format | .> <date/time>
+	% GoWhen diff <format> <date/time>
 
-	% GoWhen range <format | .> <to date/time> <duration>
+	% GoWhen range <format> <to date/time> <duration>
 
 
 ## Formats
@@ -75,8 +75,11 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	StampNano   = "Jan _2 15:04:05.000000000"
 
 ### Additional print formats
-    Epoch       = Unix epoch
-    Week        = Week number of the year.
+    epoch       = Unix epoch
+    week        = Week number of the year.
+    cal-week    = Produce a week long calendar.
+    cal-month   = Produce a monthly calendar.
+    cal-year    = Produce a full year calendar.
 
 ### Additional parse formats
 	.			= Best guess input string.
@@ -94,14 +97,118 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 	y - Year
 
 ### Date parsing
-Special date strings.
+Special date entry strings.
 
-    "" / now today - Today's date/time.
-    tomorrow - 
-    yesterday - 
-    next-week - 
-    last-week - 
-    epoch - UNIX epoch, (1970-01-01 00:00:00).
+    epoch       = Sets the date to `1970-01-01 00:00:00`.
+    now         = Today's date.
+    today       = Today's date.
+    tomorrow    = 
+    yesterday   = 
+    last-week   = 
+    next-week   = 
+
+
+## Date/time format conversion
+This tool now supports date/time formats for various languages. It uses a simple JSON file to build up maps of conversion rules.
+The default mapping is as follows.
+```
++------------------------------+----------------------------+--------------------+--------------------------------+
+|        GOLANG LAYOUT         |       JAVA NOTATION        |   C/CPP NOTATION   |             NOTES              |
++------------------------------+----------------------------+--------------------+--------------------------------+
+| 20060102                     | yyyyMMdd                   | %Y%m%d             | ISO 8601                       |
+| January 02, 2006             | MMMM dd, yyyy              | %B %d, %Y          |                                |
+| 02 January 2006              | dd MMMM yyyy               | %d %B %Y           |                                |
+| 02-Jan-2006                  | dd-MMM-yyyy                | %d-%b-%Y           |                                |
+| 01/02/2006                   | MM/dd/yyyy                 | %m/%d/%Y           | US                             |
+| 010206                       | MMddyy                     | %m%d%y             | US                             |
+| Jan-02-06                    | MMM-dd-yy                  | %b-%d-%y           | US                             |
+| Jan-02-2006                  | MMM-dd-yyyy                | %b-%d-%Y           | US                             |
+| 3:04 PM                      | K:mm a                     | %l:%M %p           | US                             |
+| 2006-01-02T15:04:05          | yyyy-MM-dd'T'HH:mm:ss      | %FT%T              | ISO 8601                       |
+| 2006-01-02T15:04:05-0700     | yyyy-MM-dd'T'HH:mm:ssZ     | %FT%T%z            | ISO 8601                       |
+| 2 Jan 2006 15:04:05          | d MMM yyyy HH:mm:ss        | %e %b %Y %T        |                                |
+| 2 Jan 2006 15:04             | d MMM yyyy HH:mm           | %e %b %Y %R        |                                |
+| Mon, 2 Jan 2006 15:04:05 MST | EEE, d MMM yyyy HH:mm:ss z | %a, %e %b %Y %T %Z | RFC 1123 RFC 822               |
+| 01/02/06                     | MM/dd/yy                   | %D                 | - equivalent to "%m/%d/%y"     |
+| 15:04                        | HH:mm                      | %R                 | - equivalent to "%H:%M"        |
+| 15:04:05                     | HH:mm:ss                   | %T                 | - equivalent to "%H:%M:%S"     |
+|                              |                            |                    | (the ISO 8601 time format)     |
+| 03:04:05 PM                  | KK:mm:ss a                 | %r                 | - writes localized 12-hour     |
+|                              |                            |                    | clock time (locale dependent)  |
+| 2006-01-02                   | yyyy-MM-dd                 | %F                 | - equivalent to "%Y-%m-%d"     |
+|                              |                            |                    | (the ISO 8601 date format)     |
+|                              |                            | %c                 | - writes standard date and     |
+|                              |                            |                    | time string, e.g. Sun Oct      |
+|                              |                            |                    | 17 04:41:13 2010 (locale       |
+|                              |                            |                    | dependent)                     |
+|                              |                            | %x                 | - writes localized date        |
+|                              |                            |                    | representation (locale         |
+|                              |                            |                    | dependent)                     |
+|                              |                            | %X                 | - writes localized time        |
+|                              |                            |                    | representation, e.g. 18:40:20  |
+|                              |                            |                    | or 6:40:20 PM (locale          |
+|                              |                            |                    | dependent)                     |
+| 2-Jan-2006                   | d-MMM-YYYY                 | %v                 | - is equivalent to "%e-%b-%Y"  |
+| 2006                         | yyyy                       | %Y                 | - writes year as a decimal     |
+|                              |                            |                    | number, e.g. 2017              |
+| 06                           | yy                         | %y                 | - writes last 2 digits of year |
+|                              |                            |                    | as a decimal number (range     |
+|                              |                            |                    | [00,99])                       |
+| January                      | MMMM                       | %B                 | - writes full month name, e.g. |
+|                              |                            |                    | October (locale dependent)     |
+| Jan                          | MMM                        | %b                 | - writes abbreviated month     |
+|                              |                            |                    | name, e.g. Oct (locale         |
+|                              |                            |                    | dependent)                     |
+| Jan                          | MMM                        | %h                 | - writes abbreviated month     |
+|                              |                            |                    | name, e.g. Oct (locale         |
+|                              |                            |                    | dependent)                     |
+| 01                           | MM                         | %m                 | - writes month as a decimal    |
+|                              |                            |                    | number (range [01,12])         |
+| 02                           | dd                         | %d                 | - writes day of the month as a |
+|                              |                            |                    | decimal number (range [01,31]) |
+| 2                            | d                          | %e                 | - writes day of the month as a |
+|                              |                            |                    | decimal number (range [1,31]). |
+| Mon                          | EEE                        | %a                 | - writes abbreviated weekday   |
+|                              |                            |                    | name, e.g. Fri (locale         |
+|                              |                            |                    | dependent)                     |
+| Monday                       | EEEE                       | %A                 | - writes full weekday name,    |
+|                              |                            |                    | e.g. Friday (locale dependent) |
+|                              |                            | %j                 | - Day of the year (001-366).   |
+|                              |                            | %U                 | - Week number with the first   |
+|                              |                            |                    | Sunday as the first day of     |
+|                              |                            |                    | week one (00-53).              |
+|                              |                            | %W                 | - Week number with the first   |
+|                              |                            |                    | Monday as the first day of     |
+|                              |                            |                    | week one (00-53).              |
+|                              |                            | %w                 | - Weekday as a decimal number  |
+|                              |                            |                    | with Sunday as 0 (0-6).        |
+|                              |                            | %u                 | - writes weekday as a decimal  |
+|                              |                            |                    | number, where Monday is 1 (ISO |
+|                              |                            |                    | 8601 format) (range [1-7])     |
+| 15                           | HH                         | %H                 | - writes hour as a decimal     |
+|                              |                            |                    | number, 24 hour clock (range   |
+|                              |                            |                    | [00-23])                       |
+| 3                            | K                          | %l                 | -                              |
+| 03                           | KK                         | %I                 | - writes hour as a decimal     |
+|                              |                            |                    | number, 12 hour clock (range   |
+|                              |                            |                    | [01,12])                       |
+| PM                           | a                          | %p                 | - writes localized a.m. or     |
+|                              |                            |                    | p.m. (locale dependent)        |
+| 04                           | mm                         | %M                 | - writes minute as a decimal   |
+|                              |                            |                    | number (range [00,59])         |
+| 05                           | ss                         | %S                 | - writes second as a decimal   |
+|                              |                            |                    | number (range [00,60])         |
+| -0700                        | Z                          | %z                 | - writes offset from UTC in    |
+|                              |                            |                    | the ISO 8601 format (e.g.      |
+|                              |                            |                    | -0430), or no characters if    |
+|                              |                            |                    | the time zone information is   |
+|                              |                            |                    | not available                  |
+| MST                          | z                          | %Z                 | - writes locale-dependent time |
+|                              |                            |                    | zone name or abbreviation, or  |
+|                              |                            |                    | no characters if the time zone |
+|                              |                            |                    | information is not available   |
++------------------------------+----------------------------+--------------------+--------------------------------+
+```
 
 
 ## Examples:
