@@ -3,7 +3,7 @@ package defaults
 const (
 	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
 	BinaryName    = "GoWhen"
-	BinaryVersion = "1.0.1"
+	BinaryVersion = "1.0.2"
 	SourceRepo    = "github.com/MickMake/" + BinaryName
 	BinaryRepo    = "github.com/MickMake/" + BinaryName
 

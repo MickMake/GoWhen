@@ -22,6 +22,7 @@ type Cmds struct {
 	Range    *CmdRange
 	Examples *CmdExamples
 	Convert  *CmdConvert
+	Alias    *CmdAlias
 
 	last  bool
 	Data  cal.Data
@@ -85,6 +86,9 @@ func init() {
 
 		cmds.Convert = NewCmdConvert()
 		cmds.Convert.AttachCommand(cmdRoot)
+
+		cmds.Alias = NewCmdAlias()
+		cmds.Alias.AttachCommand(cmdRoot)
 
 
 		cmds.Data.GoFormat = true
