@@ -21,6 +21,9 @@ This tool does several things:
 
 Also, since it's based on my Unify package, it has support for self-updating.
 
+Planned enhancements:
+- Ability to define command aliases. EG: `epoch` = `parse . epoch` or `christmas` = `parse . now diff . "2022-12-25 00:00:00"`
+
 
 ## Command summary
 Note: all commands are stackable. Except `format` and `is` - doesn't make any sense to make them stackable.
@@ -352,7 +355,7 @@ Show difference between `tomorrow` and `yesterday`.
 	% GoWhen parse . yesterday  diff . tomorrow
     2d
 
-Show difference between `tomorrow` and `yesterday`.
+Show difference between `last week` and `today`.
 
 	% GoWhen parse . last-week  diff . today
     7d
