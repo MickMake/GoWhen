@@ -5,22 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4aa815e7-ed2c-49f2-892b-070fb59bc573" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/cal/layouts.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cmd/flags.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdConfig/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdConfig/commands.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdConfig/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdConfig/struct.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdHelp/funcs.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdHelp/funcs.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/struct.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cal/misc.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cal/struct.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cal/struct_datetime.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cal/layouts.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cal/layouts.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cmd_input.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_input.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd_is.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd_modify.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_modify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd_output.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_output.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/commands.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,8 +97,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
-          <line>447</line>
+          <line>446</line>
           <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
+          <line>437</line>
+          <option name="timeStamp" value="181" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

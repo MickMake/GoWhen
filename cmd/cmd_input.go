@@ -56,6 +56,7 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			". \"1967-07-01\"",
 			"'%F %T' '1967-07-01 09:00:00'",
 			"'yyyy-MM-dd HH:mm:ss' '2022-12-31 09:00:00'\"",
+			". 2022-09-08 diff . 2023-07-01",
 			)
 
 	}
