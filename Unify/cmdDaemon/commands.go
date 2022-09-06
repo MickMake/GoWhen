@@ -25,7 +25,7 @@ func (d *Daemon) AttachCommands(cmd *cobra.Command) *cobra.Command {
 		// ******************************************************************************** //
 		d.SelfCmd = &cobra.Command{
 			Use:                   CmdDaemon,
-			Aliases:               []string{""},
+			Aliases:               []string{},
 			Short:                 fmt.Sprintf("Daemonize commands."),
 			Long:                  fmt.Sprintf("Daemonize commands."),
 			DisableFlagParsing:    false,

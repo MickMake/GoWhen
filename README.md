@@ -605,12 +605,12 @@ Commands can be stacked in any order. However, note:
 
 Parse the date `Sat 01 Jul 1967 09:42:42 AEST`, add `20 days` and print as format `20060102/20060102_150405-webcam.jpg`.
 
-	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"   add "20d"  format "20060102/20060102_150405-webcam.jpg"
+	% GoWhen parse . "Sat, 01 Jul 1967 09:42:42 AEST"   add "20d"  format "20060102/20060102_150405-webcam.jpg"
     19670820/19670820_094242-webcam.jpg
 
 Parse the date `Sat 01 Jul 1967 09:42:42 AEST`, convert to timezone `Iceland`, add `1 day`, round down to every `5 minutes` and print as format `2006-01-02 15:04:05`.
 
-	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"   timezone Iceland  add 1d  round down 5m  format "2006-01-02 15:04:05"
+	% GoWhen parse . "Sat, 01 Jul 1967 09:42:42 AEST"   timezone Iceland  add 1d  round down 5m  format "2006-01-02 15:04:05"
     1967-07-02 09:40:00
 
 Is the date `1967-07-07 09:42:42` after `1967-07-01 09:42:42`

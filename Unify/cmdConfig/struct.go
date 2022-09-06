@@ -12,30 +12,31 @@ import (
 	"strings"
 )
 
-type Config struct {
-	Dir       string
-	File      string
-	EnvPrefix string
-	Error     error
 
-	// Flags     map[string]interface{}
+type Config struct {
+	BinaryName    string
+	BinaryVersion string
+	Dir           string
+	File          string
+	EnvPrefix     string
+	Error         error
 
 	viper   *viper.Viper
 	cmd     *cobra.Command
 	SelfCmd *cobra.Command
 }
 
-func New(name string) *Config {
+func New(name string, version string) *Config {
 	var ret *Config
 
 	for range Only.Once {
 		ret = &Config{
-			Dir:       ".",
-			File:      defaultConfigFile,
-			EnvPrefix: cmdVersion.GetEnvPrefix(),
-			Error:     nil,
-
-			// Flags: make(map[string]interface{}),
+			BinaryName:    name,
+			BinaryVersion: version,
+			Dir:           ".",
+			File:          defaultConfigFile,
+			EnvPrefix:     cmdVersion.GetEnvPrefix(),
+			Error:         nil,
 
 			viper:   viper.New(),
 			cmd:     nil,
@@ -46,7 +47,7 @@ func New(name string) *Config {
 		if ret.Error != nil {
 			break
 		}
-		ret.SetDir(filepath.Join(ret.Dir, "."+name))
+		ret.SetDir(filepath.Join(ret.Dir, "." + name))
 
 		// Cmd.CacheDir, ret.Error = os.UserHomeDir()
 		// if ret.Error != nil {
@@ -74,6 +75,14 @@ func (c *Config) GetViper() *viper.Viper {
 
 func (c *Config) GetCmd() *cobra.Command {
 	return c.SelfCmd
+}
+
+func (c *Config) GetBinaryName() string {
+	return c.BinaryName
+}
+
+func (c *Config) GetBinaryVersion() string {
+	return c.BinaryVersion
 }
 
 func (c *Config) SetDir(path string) {

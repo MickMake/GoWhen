@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4aa815e7-ed2c-49f2-892b-070fb59bc573" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.goreleaser.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.goreleaser.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/GoWhen_linux_amd64/GoWhen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdConfig/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdConfig/commands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdConfig/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdConfig/struct.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdCron/funcs.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdCron/funcs.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdDaemon/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdDaemon/commands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdVersion/path.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdVersion/path.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/struct.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +92,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/Unify/struct.go</url>
-          <line>186</line>
+          <line>203</line>
           <option name="timeStamp" value="99" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
