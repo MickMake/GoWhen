@@ -1,5 +1,5 @@
 bin/Go*
 dist/*
-!dist/GoWhen_linux_amd64*
+#!dist/GoWhen_linux_amd64*
 data/
 .*.swp

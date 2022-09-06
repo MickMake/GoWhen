@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4aa815e7-ed2c-49f2-892b-070fb59bc573" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cal/struct_data.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cal/struct_data.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd_examples.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_examples.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd_input.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_input.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defaults/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/defaults/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.goreleaser.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.goreleaser.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/GoWhen_linux_amd64/GoWhen" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
