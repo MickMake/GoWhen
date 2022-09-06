@@ -502,6 +502,41 @@ func (d *Data) PrintFromDate() {
 			break
 		}
 
+		if d.Format == "epoch" {
+			fmt.Printf("%d\n", d.FromDate.Time.Unix())
+			break
+		}
+
+		if d.Format == "week" {
+			_, w := d.FromDate.Time.ISOWeek()
+			fmt.Printf("%d\n", w)
+			break
+		}
+
+		if d.Format == "list" {
+			m := New(*d.FromDate.Time).Week()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-week" {
+			m := New(*d.FromDate.Time).Week()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-month" {
+			m := New(*d.FromDate.Time).Month()
+			m.Print()
+			break
+		}
+
+		if d.Format == "cal-year" {
+			y := New(*d.FromDate.Time).Year()
+			y.Print()
+			break
+		}
+
 		if d.Format == "" {
 			d.Format = time.RFC3339Nano
 		}
@@ -516,7 +551,7 @@ func (d *Data) PrintToDate() {
 		}
 
 		if d.Format == "epoch" {
-			fmt.Printf("%d\n", d.FromDate.Time.Unix())
+			fmt.Printf("%d\n", d.ToDate.Time.Unix())
 			break
 		}
 

@@ -77,9 +77,17 @@ Parse the date string "1967-07-01 09:42:42" with custom format "2006-01-02 15:04
     % GoWhen parse "1967-07-01 09:42:42" "2006-01-02 15:04:05"
     1967-07-01T09:42:42Z
 
+Print today as a UNIX epoch
+    % GoWhen parse epoch .
+    1662445828
+
 Print UNIX epoch
-    % GoWhen parse "epoch" ""
+    % GoWhen parse . epoch
     1970-01-01T00:00:00Z
+
+Print last week's week number
+    % GoWhen parse week last-week
+    35
 
 
 ### Adding

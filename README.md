@@ -283,6 +283,10 @@ Conversion table:
 ## Examples:
 
 ### Parsing.
+`% GoWhen parse <format> <date/time>`
+
+The `parse` command will use the specified date/time format to parse as well as using this format string further along the chain.
+
 Parse the date string `Sat 01 Jul 1967 09:42:42 AEST`.
 
 	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"
@@ -293,13 +297,22 @@ Parse the date string `1967-07-01 09:42:42` with custom format `2006-01-02 15:04
 	% GoWhen parse "2006-01-02 15:04:05" "1967-07-01 09:42:42"
     1967-07-01T09:42:42Z
 
-Print UNIX epoch
+    Print today as a UNIX epoch
+    % GoWhen parse epoch .
+    1662445828
 
+    Print UNIX epoch
     % GoWhen parse . epoch
     1970-01-01T00:00:00Z
 
+    Print last week's week number
+    % GoWhen parse week last-week
+    35
+
 
 ### Adding
+`% GoWhen add <duration>`
+
 Parse today's date and add `20 days`.
 
 	% GoWhen parse . today  add "20d"
@@ -316,6 +329,8 @@ Parse today's date and add `-1 year, +12 months, -1 week, +7 days, -2 hours, +12
 
 
 ### Timezones
+`GoWhen timezone <zone>`
+
 Convert `1967-07-01 09:42:42` to timezone `Australia/Sydney`.
 
 	% GoWhen parse . "1967-07-01 09:42:42"  timezone "Australia/Sydney"
@@ -338,6 +353,8 @@ Convert `1967-07-01 09:42:42` to timezone `Iceland`.
 
 
 ### Rounding
+`GoWhen round <up|down> <duration>`
+
 Round `1967-07-01 09:42:42` down to the nearest `5 minutes`.
 
 	% GoWhen parse . "1967-07-01 09:42:42"  round down 5m
@@ -350,6 +367,8 @@ Round `1967-07-01 09:42:42` up to the nearest `1 hour`.
 
 
 ### Differences
+`GoWhen diff <format> <date/time>`
+
 Show difference between `tomorrow` and `yesterday`.
 
 	% GoWhen parse . yesterday  diff . tomorrow
@@ -372,6 +391,13 @@ Show difference between "2022-02-01 00:00:00" and "now".
 
 
 ### Conditionals
+	% GoWhen is dst
+	% GoWhen is leap
+	% GoWhen is weekday
+	% GoWhen is weekend
+	% GoWhen is before <format> <date/time>
+	% GoWhen is after <format> <date/time>
+
 Is the date `1967-07-07 09:42:42` after `1967-07-01 09:42:42`
 
     % GoWhen parse . "1967-07-01 09:42:42"   is after . "1967-07-07 09:42:42"
@@ -384,6 +410,8 @@ Is the date `1967-07-01 09:42:42` before `1967-07-07 09:42:42`
 
 
 ### Formatting
+	% GoWhen format <format | cal-year | cal-month | cal-week>
+
 Format `1967-07-01 09:42:42` as `Mon Jan _2 15:04:05 MST 2006`.
 
 	% GoWhen parse . "1967-07-01 09:42:42"  format UnixDate
@@ -467,6 +495,8 @@ Print a calendar for the week of `1967-07-01`.
 
 
 ### Ranging
+	% GoWhen range <format> <to date/time> <duration>
+
 Produce a set of dates from `2022-01-01 00:00:00` to `2022-01-01 10:00:00` in 1h increments.
 
     % GoWhen parse . "2022-01-01 00:00:00"  range . "2022-01-01 10:00:00" 1h
@@ -568,6 +598,11 @@ IE: Show days that a particular date falls on.
 
 
 ### Stacking
+Commands can be stacked in any order. However, note:
+
+- It only makes sense to have `parse` as the first command.
+- Output commands should be last - `format`, `diff`, `range` and the `is` commands.
+
 Parse the date `Sat 01 Jul 1967 09:42:42 AEST`, add `20 days` and print as format `20060102/20060102_150405-webcam.jpg`.
 
 	% GoWhen parse . "Sat 01 Jul 1967 09:42:42 AEST"   add "20d"  format "20060102/20060102_150405-webcam.jpg"
@@ -588,6 +623,24 @@ Is the date `1967-07-01 09:42:42` before `1967-07-07 09:42:42`
     % GoWhen parse . "1967-07-01 09:42:42"   is before . "1967-07-07 09:42:42"
     YES
 
+Both these commands produce the same output.
+
+    % GoWhen parse week last-week format week
+    35
+    % GoWhen parse week last-week
+    35
+
+    % GoWhen parse week last-week add -6M format cal-month
+    | Mar 2022
+    +----+----+----+----+----+----+----+
+    | S  | M  | T  | W  | T  | F  | S  |
+    +----+----+----+----+----+----+----+
+    | 27 | 28 |  1 |  2 |  3 |  4 |  5 |
+    |  6 |  7 |  8 |  9 | 10 | 11 | 12 |
+    | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
+    | 20 | 21 | 22 | 23 | 24 | 25 | 26 |
+    | 27 | 28 | 29 | 30 | 31 |  1 |  2 |
+    +----+----+----+----+----+----+----+
 
 ## Config file.
 ```

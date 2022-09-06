@@ -14,7 +14,7 @@ const (
 DefaultBinaryName - Extended help.
 
 ### Input
-	% GoWhen parse <format | .> <date/time>
+	% GoWhen parse <format> <date/time>
 
 ### Modify
 	% GoWhen add <duration>
@@ -26,18 +26,18 @@ DefaultBinaryName - Extended help.
 	% GoWhen round down <duration>
 
 ### Output
-	% GoWhen format <format | cal-year | cal-month | cal-week | .>
+	% GoWhen format <format | cal-year | cal-month | cal-week>
 
 	% GoWhen is dst
 	% GoWhen is leap
 	% GoWhen is weekday
 	% GoWhen is weekend
-	% GoWhen is before <format | .> <date/time>
-	% GoWhen is after <format | .> <date/time>
+	% GoWhen is before <format> <date/time>
+	% GoWhen is after <format> <date/time>
 
-	% GoWhen diff <format | .> <date/time>
+	% GoWhen diff <format> <date/time>
 
-	% GoWhen range <format | .> <to date/time> <duration>
+	% GoWhen range <format> <to date/time> <duration>
 
 
 ### Print / Parse formats

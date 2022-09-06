@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4aa815e7-ed2c-49f2-892b-070fb59bc573" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/cmd_alias.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd_convert.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_convert.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/commands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cal/struct_data.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cal/struct_data.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cmd_examples.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_examples.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cmd_input.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_input.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/defaults/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/defaults/const.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,7 +64,7 @@
     <configuration name="GoWhen" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="GoWhen" />
       <working_directory value="$PROJECT_DIR$" />
-      <parameters value="alias" />
+      <parameters value="parse week now format cal-week" />
       <kind value="PACKAGE" />
       <package value="GoWhen" />
       <directory value="$PROJECT_DIR$" />
@@ -106,6 +107,16 @@
           <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
           <line>437</line>
           <option name="timeStamp" value="181" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/cmd/cmd_output.go</url>
+          <line>65</line>
+          <option name="timeStamp" value="182" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
+          <line>486</line>
+          <option name="timeStamp" value="186" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
