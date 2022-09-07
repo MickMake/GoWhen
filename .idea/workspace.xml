@@ -5,14 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4aa815e7-ed2c-49f2-892b-070fb59bc573" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Unify/cmdShell/commands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.goreleaser.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.goreleaser.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdConfig/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdConfig/commands.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdConfig/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdConfig/struct.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdCron/funcs.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdCron/funcs.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdDaemon/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdDaemon/commands.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Unify/cmdVersion/path.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdVersion/path.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdHelp/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdHelp/commands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdHelp/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdHelp/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Unify/cmdHelp/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/cmdHelp/struct.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Unify/struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/Unify/struct.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cmd_alias.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_alias.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cmd_examples.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd_examples.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/commands.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/flags.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/flags.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/reparse.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/reparse.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defaults/const.go" beforeDir="false" afterPath="$PROJECT_DIR$/defaults/const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,34 +52,52 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="DefaultGoTemplateProperty" value="Go File" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="go.format.on.save.advertiser.fired" value="true" />
-    <property name="go.formatter.settings.were.checked" value="true" />
-    <property name="go.import.settings.migrated" value="true" />
-    <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
-    <property name="go.sdk.automatically.set" value="true" />
-    <property name="go.watchers.conflict.with.on.save.actions.check.performed" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="actions.on.save" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "last_opened_file_path": "/Users/mick",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Unify/cmdShell" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="GoWhen" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="GoWhen" />
       <working_directory value="$PROJECT_DIR$" />
-      <parameters value="parse week now format cal-week" />
+      <parameters value="help example" />
       <kind value="PACKAGE" />
       <package value="GoWhen" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <output_directory value="$PROJECT_DIR$/bin" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="GoWhen" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="GoWhen" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <method v="2" />
     </configuration>
   </component>
@@ -80,7 +106,7 @@
     <option name="version" value="3" />
   </component>
   <component name="VgoProject">
-    <integration-enabled>true</integration-enabled>
+    <settings-migrated>true</settings-migrated>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -92,7 +118,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/Unify/struct.go</url>
-          <line>203</line>
+          <line>211</line>
           <option name="timeStamp" value="99" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -101,24 +127,69 @@
           <option name="timeStamp" value="174" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
-          <line>446</line>
-          <option name="timeStamp" value="180" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
-          <line>437</line>
-          <option name="timeStamp" value="181" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/cmd/cmd_output.go</url>
           <line>65</line>
           <option name="timeStamp" value="182" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdShell/shell.go</url>
+          <line>105</line>
+          <option name="timeStamp" value="219" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdShell/shell.go</url>
+          <line>107</line>
+          <option name="timeStamp" value="220" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/cmd/cmd_input.go</url>
+          <line>74</line>
+          <option name="timeStamp" value="228" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/cmd/cal/struct_data.go</url>
-          <line>486</line>
-          <option name="timeStamp" value="186" />
+          <line>119</line>
+          <option name="timeStamp" value="229" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdShell/shell.go</url>
+          <line>106</line>
+          <option name="timeStamp" value="238" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdShell/shell.go</url>
+          <line>51</line>
+          <option name="timeStamp" value="241" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdShell/shell.go</url>
+          <line>56</line>
+          <option name="timeStamp" value="246" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdHelp/commands.go</url>
+          <line>174</line>
+          <option name="timeStamp" value="253" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdHelp/commands.go</url>
+          <line>124</line>
+          <option name="timeStamp" value="254" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdHelp/commands.go</url>
+          <line>163</line>
+          <option name="timeStamp" value="255" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdHelp/commands.go</url>
+          <line>146</line>
+          <option name="timeStamp" value="256" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/Unify/cmdHelp/commands.go</url>
+          <line>129</line>
+          <option name="timeStamp" value="257" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -33,8 +33,15 @@ func (cs *Cmds) AttachFlags(cmd *cobra.Command, viper *viper.Viper) {
 
 func (cs *Cmds) InitArgs(cmd *cobra.Command, _ []string) error {
 	for range Only.Once {
-		cmds.Data.SetDateIfNil()
-		cmds.Data.SetCmd(cmd.Name())
+		cs.Error = nil
+		if cs.reparse {
+			// We can re-execute commands inline, (particularly in a shell).
+			break
+		}
+		cs.reparse = true
+
+		cs.Data.SetDateIfNil()
+		cs.Data.SetCmd(cmd.Name())
 		switch cmd.Flag(flagFormat).Value.String() {
 			case flagGoFormat:
 				cs.Data.GoFormat = true

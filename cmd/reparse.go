@@ -24,16 +24,6 @@ const (
 
 func (cs *Cmds) ReparseArgs(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		// f := ""
-		// if cmds.Data.FromDate.Time != nil {
-		// 	f = cmds.Data.FromDate.Time.Format(time.RFC3339)
-		// }
-		// t := ""
-		// if cmds.Data.ToDate.Time != nil {
-		// 	t = cmds.Data.ToDate.Time.Format(time.RFC3339)
-		// }
-		// fmt.Printf("%s(%s): FromDate: %s\tToDate: %s\n", cs.Data.Command, cs.Data.Format, f, t)
-
 		if (len(args) == 0) || (cs.last) {
 			cs.Data.Print()
 			break

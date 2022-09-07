@@ -111,7 +111,7 @@ func (w *CmdAlias) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 func (cs *Cmds) CmdAlias(_ *cobra.Command, _ []string) error {
 	for range Only.Once {
-		_ = cs.Alias.SelfCmd.Help()
+		cs.Error = cs.Alias.SelfCmd.Help()
 	}
 
 	return cs.Error

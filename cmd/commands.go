@@ -20,10 +20,10 @@ type Cmds struct {
 	Is       *CmdIs
 	Diff     *CmdDiff
 	Range    *CmdRange
-	Examples *CmdExamples
 	Convert  *CmdConvert
 	Alias    *CmdAlias
 
+	reparse  bool
 	last  bool
 	Data  cal.Data
 	Error error
@@ -51,6 +51,8 @@ func init() {
 				BinaryRepo:    defaults.BinaryRepo,
 				EnvPrefix:     defaults.EnvPrefix,
 				HelpTemplate:  defaults.HelpTemplate,
+				ReadMe:        defaults.Readme,
+				Examples:      defaults.Examples,
 			},
 			Unify.Flags{},
 		)
@@ -77,9 +79,6 @@ func init() {
 
 		cmds.Diff = NewCmdDiff()
 		cmds.Diff.AttachCommand(cmdRoot)
-
-		cmds.Examples = NewCmdExamples()
-		cmds.Examples.AttachCommand(cmdRoot)
 
 		cmds.Range = NewCmdRange()
 		cmds.Range.AttachCommand(cmdRoot)
