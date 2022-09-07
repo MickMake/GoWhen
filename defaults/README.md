@@ -18,6 +18,7 @@ This tool does several things:
 - cal - Produce a traditional calendar in multiple formats.
 - range - Produce a range of dates with variable duration span between.
 - Support for more parse formats, (Java and C), using a simple JSON mapping file.
+- Can run as an interactive shell.
 
 Also, since it's based on my Unify package, it has support for self-updating.
 
