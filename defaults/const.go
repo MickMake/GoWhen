@@ -1,9 +1,21 @@
 package defaults
 
+import _ "embed"
+
+// Need to execute `go generate -v -x defaults/const.go` OR `go generate -v -x ./...`
+//go:generate cp ../README.md README.md
+//go:generate cp ../EXAMPLES.md EXAMPLES.md
+
+//go:embed README.md
+var Readme string
+
+//go:embed EXAMPLES.md
+var Examples string
+
 const (
 	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
 	BinaryName    = "GoWhen"
-	BinaryVersion = "1.0.2"
+	BinaryVersion = "1.0.3"
 	SourceRepo    = "github.com/MickMake/" + BinaryName
 	BinaryRepo    = "github.com/MickMake/" + BinaryName
 

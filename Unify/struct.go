@@ -14,6 +14,7 @@ import (
 	"GoWhen/Unify/cmdCron"
 	"GoWhen/Unify/cmdDaemon"
 	"GoWhen/Unify/cmdHelp"
+	"GoWhen/Unify/cmdShell"
 	"GoWhen/Unify/cmdVersion"
 	"GoWhen/defaults"
 	"errors"
@@ -42,6 +43,8 @@ type Options struct {
 	BinaryRepo    string `json:"binary_repo"`
 	EnvPrefix     string `json:"env_prefix"`
 	HelpTemplate  string `json:"help_template"`
+	ReadMe        string `json:"readme"`
+	Examples      string `json:"examples"`
 }
 
 type Flags struct {
@@ -106,10 +109,14 @@ func (u *Unify) InitCmds() error {
 
 		// u.Commands.CmdSystray = cmdSystray.New(u.Commands.CmdConfig, u.Commands.CmdVersion)
 
+		u.Commands.CmdShell = cmdShell.New(u.Options.BinaryName, u.Options.BinaryVersion, u.GetConfigDir())
+
 		u.Commands.CmdHelp = cmdHelp.New()
 		u.Commands.CmdHelp.SetCommand(u.Options.BinaryName)
 		u.Commands.CmdHelp.SetExtendedHelpTemplate(u.Options.HelpTemplate)
 		u.Commands.CmdHelp.SetEnvPrefix(u.Options.EnvPrefix)
+		u.Commands.CmdHelp.SetReadMe(u.Options.ReadMe)
+		u.Commands.CmdHelp.SetExamples(u.Options.Examples)
 	}
 
 	return u.Error
@@ -147,6 +154,7 @@ func (u *Unify) Execute() error {
 		// u.Commands.CmdSystray.AttachCommands(u.Commands.CmdRoot)
 		u.Commands.CmdCron.AttachCommands(u.Commands.CmdRoot)
 		u.Commands.CmdConfig.AttachCommands(u.Commands.CmdRoot)
+		u.Commands.CmdShell.AttachCommands(u.Commands.CmdRoot)
 		u.Commands.CmdHelp.AttachCommands(u.Commands.CmdRoot)
 		u.Commands.CmdConfig.SetDir(u.Flags.ConfigDir)
 		u.Commands.CmdConfig.SetFile(u.Flags.ConfigFile)
@@ -222,6 +230,7 @@ type Commands struct {
 	CmdConfig  *cmdConfig.Config
 	// CmdSystray *cmdSystray.Config
 	CmdHelp    *cmdHelp.Help
+	CmdShell   *cmdShell.Shell
 }
 
 // Execute -

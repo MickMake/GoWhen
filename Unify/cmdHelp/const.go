@@ -18,7 +18,7 @@ Examples:
 Available Commands:{{range .Commands}}{{if (or .IsAvailableCommand (eq .Name "help"))}}
   {{rpad .Name .NamePadding }} {{ with (index .Annotations "group") }}{{ . }}	- {{ end }}{{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableLocalFlags}}
 
-Flags: Use "{{.Root.CommandPath}} help-all" for more info.
+Flags: Use "{{.Root.CommandPath}} help flags" for more info.
 
 Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand }}
   {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableSubCommands}}

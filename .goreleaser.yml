@@ -1,23 +1,11 @@
 ################################################################################
-#gitlab_urls:
-#  api: https://version-control.it.suqld.com/api/v4/
-#  download: https://version-control.it.suqld.com
-#  # set to true if you use a self-signed certificate
-#  skip_tls_verify: false
-#  # set to true if you want to upload to the Package Registry rather than attachments
-#  # Only works with GitLab 13.5+
-#  #use_package_registry: false
-#  # Set this if you set GITLAB_TOKEN to the value of CI_JOB_TOKEN:
-#  #use_job_token: false
-
-################################################################################
 project_name: GoWhen
 
 ################################################################################
 before:
   hooks:
     - go mod download
-    - go generate ./...
+    - go generate -x ./...
 
 ################################################################################
 builds:
@@ -40,7 +28,7 @@ archives:
   -
     # ID of this archive.
     # Defaults to `default`.
-    #id: GoWhen-archive
+    #id: GoWhen
 
     # Builds reference which build instances should be archived in this archive.
     #builds:

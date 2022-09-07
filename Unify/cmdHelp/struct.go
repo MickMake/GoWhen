@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+
 type Help struct {
 	Error error
 
@@ -16,6 +17,8 @@ type Help struct {
 	FlagHelpTemplate     string
 	ExtendedHelpTemplate string
 	EnvPrefix            string
+	ReadMe               string
+	Examples             string
 
 	cmd     *cobra.Command
 	SelfCmd *cobra.Command
@@ -109,4 +112,12 @@ func (h *Help) SetEnvPrefix(text string) {
 
 func (h *Help) ExtendedHelp() {
 	fmt.Println(h.ExtendedHelpTemplate)
+}
+
+func (h *Help) SetReadMe(text string) {
+	h.ReadMe = text
+}
+
+func (h *Help) SetExamples(text string) {
+	h.Examples = text
 }
