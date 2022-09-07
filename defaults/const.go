@@ -15,7 +15,7 @@ var Examples string
 const (
 	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
 	BinaryName    = "GoWhen"
-	BinaryVersion = "1.0.3"
+	BinaryVersion = "1.0.4"
 	SourceRepo    = "github.com/MickMake/" + BinaryName
 	BinaryRepo    = "github.com/MickMake/" + BinaryName
 
