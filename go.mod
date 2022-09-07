@@ -19,7 +19,9 @@ require (
 	github.com/spf13/viper v1.13.0
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
 	google.golang.org/api v0.84.0
+)
 
+require (
 	cloud.google.com/go/compute v1.7.0 // indirect
 	github.com/MichaelMure/go-term-markdown v0.1.4 // indirect
 	github.com/MichaelMure/go-term-text v0.3.1 // indirect
