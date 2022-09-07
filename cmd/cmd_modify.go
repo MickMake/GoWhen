@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdHelp"
-	"fmt"
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/cmdExec"
+	"github.com/MickMake/GoUnify/cmdHelp"
 	"github.com/spf13/cobra"
 )
 
@@ -37,8 +37,8 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "add <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
-			Short:                 fmt.Sprintf("Add duration to date."),
-			Long:                  fmt.Sprintf("Add duration to date."),
+			Short:                 "Add duration to date.",
+			Long:                  "Add duration to date.",
 			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -62,7 +62,7 @@ func (w *CmdAdd) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg string
-		arg, args = cs.PopArg(args)
+		arg, args = cmdExec.PopArg(args)
 		// ######################################## //
 
 
@@ -73,7 +73,8 @@ func (cs *Cmds) CmdAdd(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -109,8 +110,8 @@ func (w *CmdTimezone) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "timezone <zone>",
 			Aliases:               []string{"tz"},
 			Annotations:           map[string]string{"group": "Timezone"},
-			Short:                 fmt.Sprintf("Adjust date/time by timezone."),
-			Long:                  fmt.Sprintf("Adjust date/time by timezone."),
+			Short:                 "Adjust date/time by timezone.",
+			Long:                  "Adjust date/time by timezone.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -132,7 +133,7 @@ func (w *CmdTimezone) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdTimezone(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg string
-		arg, args = cs.PopArg(args)
+		arg, args = cmdExec.PopArg(args)
 		// ######################################## //
 
 
@@ -143,7 +144,8 @@ func (cs *Cmds) CmdTimezone(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -179,8 +181,8 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "round <up | down> <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Round"},
-			Short:                 fmt.Sprintf("Round up/down date/time."),
-			Long:                  fmt.Sprintf("Round up/down date/time."),
+			Short:                 "Round up/down date/time.",
+			Long:                  "Round up/down date/time.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -200,8 +202,8 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "up <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Round"},
-			Short:                 fmt.Sprintf("Round up date/time."),
-			Long:                  fmt.Sprintf("Round up date/time."),
+			Short:                 "Round up date/time.",
+			Long:                  "Round up date/time.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -219,8 +221,8 @@ func (w *CmdRound) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "down <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Round"},
-			Short:                 fmt.Sprintf("Round down date/time."),
-			Long:                  fmt.Sprintf("Round down date/time."),
+			Short:                 "Round down date/time.",
+			Long:                  "Round down date/time.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -250,7 +252,7 @@ func (cs *Cmds) CmdRound(_ *cobra.Command, _ []string) error {
 func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg string
-		arg, args = cs.PopArg(args)
+		arg, args = cmdExec.PopArg(args)
 		// ######################################## //
 
 
@@ -261,7 +263,8 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -271,7 +274,7 @@ func (cs *Cmds) CmdRoundUp(cmd *cobra.Command, args []string) error {
 func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg string
-		arg, args = cs.PopArg(args)
+		arg, args = cmdExec.PopArg(args)
 		// ######################################## //
 
 
@@ -282,7 +285,8 @@ func (cs *Cmds) CmdRoundDown(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error

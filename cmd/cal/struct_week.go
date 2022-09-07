@@ -1,7 +1,7 @@
 package cal
 
 import (
-	"GoWhen/Unify/Only"
+	"github.com/MickMake/GoUnify/Only"
 	"fmt"
 	"github.com/jinzhu/now"
 	"github.com/olekukonko/tablewriter"

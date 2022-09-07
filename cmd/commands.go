@@ -1,16 +1,16 @@
 package cmd
 
 import (
-	"GoWhen/Unify"
-	"GoWhen/Unify/Only"
 	"GoWhen/cmd/cal"
 	"GoWhen/defaults"
+	"github.com/MickMake/GoUnify"
+	"github.com/MickMake/GoUnify/Only"
 	"github.com/spf13/cobra"
 )
 
 
 type Cmds struct {
-	Unify    *Unify.Unify
+	Unify    *GoUnify.Unify
 	Google   *CmdGoogle
 	Parse    *CmdParse
 	Add      *CmdAdd
@@ -42,8 +42,8 @@ var cmds Cmds
 
 func init() {
 	for range Only.Once {
-		cmds.Unify = Unify.New(
-			Unify.Options{
+		cmds.Unify = GoUnify.New(
+			GoUnify.Options{
 				Description:   defaults.Description,
 				BinaryName:    defaults.BinaryName,
 				BinaryVersion: defaults.BinaryVersion,
@@ -54,7 +54,7 @@ func init() {
 				ReadMe:        defaults.Readme,
 				Examples:      defaults.Examples,
 			},
-			Unify.Flags{},
+			GoUnify.Flags{},
 		)
 
 		cmdRoot := cmds.Unify.GetCmd()

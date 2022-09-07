@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"GoWhen/Unify/Only"
 	"GoWhen/cmd/cal"
 	"errors"
 	"fmt"
+	"github.com/MickMake/GoUnify/Only"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"path/filepath"

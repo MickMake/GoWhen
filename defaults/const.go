@@ -21,7 +21,6 @@ const (
 
 	EnvPrefix = "GOWHEN"
 
-	// HelpTemplate Extended help...
 	HelpTemplate = `
 DefaultBinaryName - Extended help.
 

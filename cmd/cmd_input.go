@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdHelp"
-	"fmt"
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/cmdExec"
+	"github.com/MickMake/GoUnify/cmdHelp"
 	"github.com/spf13/cobra"
 )
 
@@ -37,8 +37,8 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "parse <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
-			Short:                 fmt.Sprintf("Parse date or time."),
-			Long:                  fmt.Sprintf("Parse date or time."),
+			Short:                 "Parse date or time.",
+			Long:                  "Parse date or time.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -68,7 +68,7 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdParse(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(2, args)
+		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
 
@@ -79,7 +79,8 @@ func (cs *Cmds) CmdParse(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error

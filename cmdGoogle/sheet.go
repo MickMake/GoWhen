@@ -1,7 +1,7 @@
 package cmdGoogle
 
 import (
-	"GoWhen/Unify/Only"
+	"github.com/MickMake/GoUnify/Only"
 	"context"
 	"encoding/json"
 	"errors"

@@ -1,15 +1,16 @@
 package cal
 
 import (
-	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdVersion"
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/cmdVersion"
 	"github.com/olekukonko/tablewriter"
 	"os"
 	"regexp"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -43,6 +44,33 @@ func (c *Convert) String() string {
 
 		ret += "Conversion table:\n"
 		ret += buf.String()
+	}
+	return ret
+}
+
+func (c *Convert) Json() string {
+	var ret string
+	for range Only.Once {
+		if c == nil {
+			break
+		}
+
+		// j, err := json.MarshalIndent(c.Data, "", "\t")
+		// if err != nil {
+		// 	break
+		// }
+		// ret = string(j)
+
+		j, err := json.Marshal(c.Data)
+		if err != nil {
+			break
+		}
+
+		// Make it look nice
+		ret = strings.ReplaceAll(string(j), "},{", "},\n    {")
+		ret = strings.ReplaceAll(ret, "\",\"", "\",\t\"")
+		ret = strings.Replace(ret, "[{", "[\n    {", 1)
+		ret = strings.Replace(ret, "}]", "}\n]", 1)
 	}
 	return ret
 }

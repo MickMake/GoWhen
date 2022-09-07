@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoWhen/Unify/Only"
+	"github.com/MickMake/GoUnify/Only"
 	"GoWhen/cmd"
 	"fmt"
 	"os"

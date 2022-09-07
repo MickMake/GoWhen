@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdHelp"
 	"fmt"
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/cmdExec"
+	"github.com/MickMake/GoUnify/cmdHelp"
 	"github.com/spf13/cobra"
 )
 
@@ -37,8 +38,8 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "format <format>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Format"},
-			Short:                 fmt.Sprintf("Format date or time."),
-			Long:                  fmt.Sprintf("Format date or time."),
+			Short:                 "Format date or time.",
+			Long:                  "Format date or time.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -59,7 +60,7 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg string
-		arg, args = cs.PopArg(args)
+		arg, args = cmdExec.PopArg(args)
 		// ######################################## //
 
 
@@ -68,7 +69,8 @@ func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -104,8 +106,8 @@ func (w *CmdDiff) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "diff <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Diff"},
-			Short:                 fmt.Sprintf("Diff date or time."),
-			Long:                  fmt.Sprintf("Diff date or time."),
+			Short:                 "Diff date or time.",
+			Long:                  "Diff date or time.",
 			DisableFlagParsing:    true, 
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -128,7 +130,7 @@ func (w *CmdDiff) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdDiffFormat(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(2, args)
+		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
 
@@ -140,7 +142,8 @@ func (cs *Cmds) CmdDiffFormat(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -176,8 +179,8 @@ func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "range <format> <to date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Range"},
-			Short:                 fmt.Sprintf("Produce a range of dates."),
-			Long:                  fmt.Sprintf("Produce a range of dates."),
+			Short:                 "Produce a range of dates.",
+			Long:                  "Produce a range of dates.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -202,7 +205,7 @@ func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 func (cs *Cmds) CmdRange(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(3, args)
+		arg, args = cmdExec.PopArgs(3, args)
 		// ######################################## //
 
 
@@ -214,7 +217,8 @@ func (cs *Cmds) CmdRange(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -250,8 +254,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "is",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is date or time."),
-			Long:                  fmt.Sprintf("Is date or time."),
+			Short:                 "Is date or time.",
+			Long:                  "Is date or time.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -271,8 +275,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "dst",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is date a within daylight savins time?"),
-			Long:                  fmt.Sprintf("Is date a within daylight savins time?"),
+			Short:                 "Is date a within daylight savins time?",
+			Long:                  "Is date a within daylight savins time?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -289,8 +293,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "leap",
 			Aliases:               []string{"leap-year"},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is date a leap year?"),
-			Long:                  fmt.Sprintf("Is date a leap year?"),
+			Short:                 "Is date a leap year?",
+			Long:                  "Is date a leap year?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -307,8 +311,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "weekday",
 			Aliases:               []string{"workday"},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is date a weekday?"),
-			Long:                  fmt.Sprintf("Is date a weekday?"),
+			Short:                 "Is date a weekday?",
+			Long:                  "Is date a weekday?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -325,8 +329,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "weekend",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is date a weekday?"),
-			Long:                  fmt.Sprintf("Is date a weekday?"),
+			Short:                 "Is date a weekday?",
+			Long:                  "Is date a weekday?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -343,8 +347,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "before <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is parsed date before specified date?"),
-			Long:                  fmt.Sprintf("Is parsed date before specified date?"),
+			Short:                 "Is parsed date before specified date?",
+			Long:                  "Is parsed date before specified date?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -363,8 +367,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "after <format> <date/time>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 fmt.Sprintf("Is parsed date after specified date?"),
-			Long:                  fmt.Sprintf("Is parsed date after specified date?"),
+			Short:                 "Is parsed date after specified date?",
+			Long:                  "Is parsed date after specified date?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -406,7 +410,8 @@ func (cs *Cmds) CmdIsDst(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -427,7 +432,8 @@ func (cs *Cmds) CmdIsLeap(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -448,7 +454,8 @@ func (cs *Cmds) CmdIsWeekday(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -469,7 +476,8 @@ func (cs *Cmds) CmdIsWeekend(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -478,7 +486,7 @@ func (cs *Cmds) CmdIsWeekend(cmd *cobra.Command, args []string) error {
 func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(2, args)
+		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
 
@@ -492,7 +500,8 @@ func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error
@@ -501,7 +510,7 @@ func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 func (cs *Cmds) CmdIsAfter(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(2, args)
+		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
 
@@ -515,7 +524,8 @@ func (cs *Cmds) CmdIsAfter(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		cs.Error = cs.ReparseArgs(cmd, args)
+		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		cs.LastPrint()
 	}
 
 	return cs.Error

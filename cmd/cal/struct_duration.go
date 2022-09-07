@@ -1,7 +1,7 @@
 package cal
 
 import (
-	"GoWhen/Unify/Only"
+	"github.com/MickMake/GoUnify/Only"
 	"errors"
 	"strconv"
 	"strings"

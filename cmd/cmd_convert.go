@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdHelp"
 	"GoWhen/cmd/cal"
 	"fmt"
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/cmdExec"
+	"github.com/MickMake/GoUnify/cmdHelp"
 	"github.com/spf13/cobra"
 	"path/filepath"
 	"time"
@@ -37,11 +38,11 @@ func (w *CmdConvert) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "convert <format> <date/time>",
+			Use:                   "convert",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Convert"},
-			Short:                 fmt.Sprintf("Date/time format conversion tables."),
-			Long:                  fmt.Sprintf("Date/time format conversion tables."),
+			Short:                 "Date/time format conversion tables.",
+			Long:                  "Date/time format conversion tables.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -62,8 +63,8 @@ func (w *CmdConvert) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "list",
 			Aliases:               []string{"ls"},
 			Annotations:           map[string]string{"group": "Convert"},
-			Short:                 fmt.Sprintf("Show format conversion tables."),
-			Long:                  fmt.Sprintf("Show format conversion tables."),
+			Short:                 "Show format conversion tables.",
+			Long:                  "Show format conversion tables.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -80,8 +81,8 @@ func (w *CmdConvert) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "layouts",
 			Aliases:               []string{"layout"},
 			Annotations:           map[string]string{"group": "Convert"},
-			Short:                 fmt.Sprintf("Show predefined GoLang layouts."),
-			Long:                  fmt.Sprintf("Show predefined GoLang layouts."),
+			Short:                 "Show predefined GoLang layouts.",
+			Long:                  "Show predefined GoLang layouts.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -98,8 +99,8 @@ func (w *CmdConvert) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "options",
 			Aliases:               []string{"option"},
 			Annotations:           map[string]string{"group": "Convert"},
-			Short:                 fmt.Sprintf("Show GoLang layout options."),
-			Long:                  fmt.Sprintf("Show GoLang layout options."),
+			Short:                 "Show GoLang layout options.",
+			Long:                  "Show GoLang layout options.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -116,8 +117,8 @@ func (w *CmdConvert) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "table",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Convert"},
-			Short:                 fmt.Sprintf("Show GoLang layout options."),
-			Long:                  fmt.Sprintf("Show GoLang layout options."),
+			Short:                 "Show conversion table.",
+			Long:                  "Show conversion table.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -130,12 +131,30 @@ func (w *CmdConvert) AttachCommand(cmd *cobra.Command) *cobra.Command {
 		)
 
 		// ******************************************************************************** //
-		var CmdConvertTest = &cobra.Command{
-			Use:                   "test",
-			Aliases:               []string{""},
+		var CmdConvertJson = &cobra.Command{
+			Use:                   "json",
+			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Convert"},
-			Short:                 fmt.Sprintf("Test format conversion tables."),
-			Long:                  fmt.Sprintf("Test format conversion tables."),
+			Short:                 "Show conversion table as JSON.",
+			Long:                  "Show conversion table as JSON.",
+			DisableFlagParsing:    false,
+			DisableFlagsInUseLine: false,
+			PreRunE:               cmds.InitArgs,
+			RunE:                  cmds.CmdConvertJson,
+			Args:                  cobra.MinimumNArgs(0),
+		}
+		w.SelfCmd.AddCommand(CmdConvertJson)
+		CmdConvertJson.Example = cmdHelp.PrintExamples(CmdConvertJson,
+			"",
+		)
+
+		// ******************************************************************************** //
+		var CmdConvertTest = &cobra.Command{
+			Use:                   "test <format> <date/time>",
+			Aliases:               []string{},
+			Annotations:           map[string]string{"group": "Convert"},
+			Short:                 "Test format conversion tables.",
+			Long:                  "Test format conversion tables.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -166,7 +185,7 @@ func (cs *Cmds) CmdConvert(_ *cobra.Command, _ []string) error {
 func (cs *Cmds) CmdConvertList(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
 		// var arg []string
-		// arg, args = cs.PopArgs(1, args)
+		// arg, args = cmdExec.PopArgs(1, args)
 		// ######################################## //
 
 
@@ -188,7 +207,8 @@ func (cs *Cmds) CmdConvertList(cmd *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
@@ -197,7 +217,7 @@ func (cs *Cmds) CmdConvertList(cmd *cobra.Command, args []string) error {
 func (cs *Cmds) CmdConvertLayouts(_ *cobra.Command, _ []string) error {
 	for range Only.Once {
 		// var arg []string
-		// arg, args = cs.PopArgs(1, args)
+		// arg, args = cmdExec.PopArgs(1, args)
 		// ######################################## //
 
 
@@ -205,7 +225,8 @@ func (cs *Cmds) CmdConvertLayouts(_ *cobra.Command, _ []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
@@ -214,7 +235,7 @@ func (cs *Cmds) CmdConvertLayouts(_ *cobra.Command, _ []string) error {
 func (cs *Cmds) CmdConvertOptions(_ *cobra.Command, _ []string) error {
 	for range Only.Once {
 		// var arg []string
-		// arg, args = cs.PopArgs(1, args)
+		// arg, args = cmdExec.PopArgs(1, args)
 		// ######################################## //
 
 
@@ -222,7 +243,8 @@ func (cs *Cmds) CmdConvertOptions(_ *cobra.Command, _ []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
@@ -231,7 +253,7 @@ func (cs *Cmds) CmdConvertOptions(_ *cobra.Command, _ []string) error {
 func (cs *Cmds) CmdConvertTable(_ *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(2, args)
+		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
 
@@ -240,8 +262,9 @@ func (cs *Cmds) CmdConvertTable(_ *cobra.Command, args []string) error {
 			fn = arg[0]
 		}
 
-		cnv, err := cal.ReadConvert(fn)
-		if err != nil {
+		var cnv *cal.Convert
+		cnv, cs.Error = cal.ReadConvert(fn)
+		if cs.Error != nil {
 			break
 		}
 		fmt.Println(cnv.String())
@@ -253,7 +276,36 @@ func (cs *Cmds) CmdConvertTable(_ *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
+	}
+
+	return cs.Error
+}
+
+func (cs *Cmds) CmdConvertJson(_ *cobra.Command, args []string) error {
+	for range Only.Once {
+		var arg []string
+		arg, args = cmdExec.PopArgs(2, args)
+		// ######################################## //
+
+
+		fn := filepath.Join(cs.Unify.Commands.CmdConfig.Dir, "convert.json")
+		if arg[0] != "" {
+			fn = arg[0]
+		}
+
+		var cnv *cal.Convert
+		cnv, cs.Error = cal.ReadConvert(fn)
+		if cs.Error != nil {
+			break
+		}
+		fmt.Println(cnv.Json())
+
+
+		// ######################################## //
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
@@ -262,7 +314,7 @@ func (cs *Cmds) CmdConvertTable(_ *cobra.Command, args []string) error {
 func (cs *Cmds) CmdConvertTest(_ *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(2, args)
+		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
 
@@ -292,7 +344,8 @@ func (cs *Cmds) CmdConvertTest(_ *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error

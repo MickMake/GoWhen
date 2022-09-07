@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"GoWhen/Unify/Only"
-	"GoWhen/Unify/cmdHelp"
 	"fmt"
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/cmdExec"
+	"github.com/MickMake/GoUnify/cmdHelp"
 	"github.com/spf13/cobra"
 )
 
@@ -37,8 +38,8 @@ func (w *CmdAlias) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "alias <add | del | *> <name> ...",
 			Aliases:               []string{"a"},
 			Annotations:           map[string]string{"group": "Alias"},
-			Short:                 fmt.Sprintf("Build up command aliases."),
-			Long:                  fmt.Sprintf("Build up command aliases."),
+			Short:                 "Build up command aliases.",
+			Long:                  "Build up command aliases.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -55,8 +56,8 @@ func (w *CmdAlias) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "list",
 			Aliases:               []string{"ls"},
 			Annotations:           map[string]string{"group": "Alias"},
-			Short:                 fmt.Sprintf("Show defined aliases."),
-			Long:                  fmt.Sprintf("Show defined aliases."),
+			Short:                 "Show defined aliases.",
+			Long:                  "Show defined aliases.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -73,8 +74,8 @@ func (w *CmdAlias) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "add <name> <cmd> ...",
 			Aliases:               []string{"create"},
 			Annotations:           map[string]string{"group": "Alias"},
-			Short:                 fmt.Sprintf("Add an alias."),
-			Long:                  fmt.Sprintf("Add an alias."),
+			Short:                 "Add an alias.",
+			Long:                  "Add an alias.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -91,8 +92,8 @@ func (w *CmdAlias) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "del <name>",
 			Aliases:               []string{"destroy"},
 			Annotations:           map[string]string{"group": "Alias"},
-			Short:                 fmt.Sprintf("Delete an alias."),
-			Long:                  fmt.Sprintf("Delete an alias."),
+			Short:                 "Delete an alias.",
+			Long:                  "Delete an alias.",
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -120,7 +121,7 @@ func (cs *Cmds) CmdAlias(_ *cobra.Command, _ []string) error {
 func (cs *Cmds) CmdAliasAdd(_ *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(1, args)
+		arg, args = cmdExec.PopArgs(1, args)
 		// ######################################## //
 
 
@@ -130,7 +131,8 @@ func (cs *Cmds) CmdAliasAdd(_ *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
@@ -139,7 +141,7 @@ func (cs *Cmds) CmdAliasAdd(_ *cobra.Command, args []string) error {
 func (cs *Cmds) CmdAliasDelete(_ *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg []string
-		arg, args = cs.PopArgs(1, args)
+		arg, args = cmdExec.PopArgs(1, args)
 		// ######################################## //
 
 
@@ -148,7 +150,8 @@ func (cs *Cmds) CmdAliasDelete(_ *cobra.Command, args []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
@@ -157,7 +160,7 @@ func (cs *Cmds) CmdAliasDelete(_ *cobra.Command, args []string) error {
 func (cs *Cmds) CmdAliasList(_ *cobra.Command, _ []string) error {
 	for range Only.Once {
 		// var arg []string
-		// arg, args = cs.PopArgs(1, args)
+		// arg, args = cmdExec.PopArgs(1, args)
 		// ######################################## //
 
 
@@ -165,7 +168,8 @@ func (cs *Cmds) CmdAliasList(_ *cobra.Command, _ []string) error {
 
 
 		// ######################################## //
-		// cs.Error = cs.ReparseArgs(cmd, args)
+		// cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
+		// cs.LastPrint()
 	}
 
 	return cs.Error
