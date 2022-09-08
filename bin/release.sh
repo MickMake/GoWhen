@@ -44,3 +44,5 @@ goreleaser release --rm-dist
 
 git add .
 git commit -m "Released ${VERSION}"
+git push
+
