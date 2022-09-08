@@ -4,12 +4,6 @@ go 1.18
 
 replace github.com/MickMake/GoUnify => ../../GoUnify
 
-replace github.com/MickMake/GoUnify/cmdVersion => ../../GoUnify/cmdVersion
-
-replace github.com/MickMake/GoUnify/cmdShell => ../../GoUnify/cmdShell
-
-replace github.com/MickMake/GoUnify/cmdDaemon => ../../GoUnify/cmdDaemon
-
 require (
 	github.com/MickMake/GoUnify v0.0.0-00010101000000-000000000000
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
@@ -82,7 +76,6 @@ require (
 	google.golang.org/genproto v0.0.0-20220616135557-88e70c0c3a90 // indirect
 	google.golang.org/grpc v1.47.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

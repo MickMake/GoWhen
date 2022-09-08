@@ -15,87 +15,36 @@ var Examples string
 const (
 	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
 	BinaryName    = "GoWhen"
-	BinaryVersion = "1.0.4"
+	BinaryVersion = "1.0.5"
 	SourceRepo    = "github.com/MickMake/" + BinaryName
 	BinaryRepo    = "github.com/MickMake/" + BinaryName
 
 	EnvPrefix = "GOWHEN"
 
-	HelpTemplate = `
-DefaultBinaryName - Extended help.
+	HelpSummary = `
+# GoWhen - CLI based Date/Time manipulation written in GoLang.
 
-### Input
-	% GoWhen parse <format> <date/time>
+This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
-### Modify
-	% GoWhen add <duration>
+This tool does several things:
+- parse - Parse a date/time string.
+- add - Add a date/time duration to a date/time.
+- timezone - Convert between timezones.
+- round - Rounding of date/time.
+- format - Print date/time in a user selectable format.
+- is dst - Is date/time within DST or not.
+- is leap - Is date/time a leap-year or not.
+- is weekend - Is date/time a weekend or not.
+- is weekday - Is date/time a weekday or not.
+- is before - Is date/time before a specified date/time.
+- is after - Is date/time after a specified date/time.
+- diff - Return date/time duration from a specified date/time.
+- cal - Produce a traditional calendar in multiple formats.
+- range - Produce a range of dates with variable duration span between.
+- Support for more parse formats, (Java and C), using a simple JSON mapping file.
+- Can run as an interactive shell.
 
-	% GoWhen timezone <zone>
-	% GoWhen tz <zone>
-
-	% GoWhen round up <duration>
-	% GoWhen round down <duration>
-
-### Output
-	% GoWhen format <format | cal-year | cal-month | cal-week>
-
-	% GoWhen is dst
-	% GoWhen is leap
-	% GoWhen is weekday
-	% GoWhen is weekend
-	% GoWhen is before <format> <date/time>
-	% GoWhen is after <format> <date/time>
-
-	% GoWhen diff <format> <date/time>
-
-	% GoWhen range <format> <to date/time> <duration>
-
-
-### Print / Parse formats
-	Layout      = "01/02 03:04:05PM '06 -0700"
-	ANSIC       = "Mon Jan _2 15:04:05 2006"
-	UnixDate    = "Mon Jan _2 15:04:05 MST 2006"
-	RubyDate    = "Mon Jan 02 15:04:05 -0700 2006"
-	RFC822      = "02 Jan 06 15:04 MST"
-	RFC822Z     = "02 Jan 06 15:04 -0700"
-	RFC850      = "Monday, 02-Jan-06 15:04:05 MST"
-	RFC1123     = "Mon, 02 Jan 2006 15:04:05 MST"
-	RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700"
-	RFC3339     = "2006-01-02T15:04:05Z07:00"
-	RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
-	Kitchen     = "3:04PM"
-	Stamp       = "Jan _2 15:04:05"
-	StampMilli  = "Jan _2 15:04:05.000"
-	StampMicro  = "Jan _2 15:04:05.000000"
-	StampNano   = "Jan _2 15:04:05.000000000"
-
-### Additional print formats
-    Epoch       = Unix epoch
-    Week        = Week number of the year.
-
-### Additional parse formats
-	.			= Best guess input string.
-
-### Add/round durations
-	ns - Nanosecond
-	us - microsecond
-	ms - Millisecond
-	s - Second
-	m - Minute
-	h - Hour
-	d - Day
-	w - Week
-	M - Month
-	y - Year
-
-### Date parsing
-Special date strings.
-    "" / now today - Today's date/time.
-    tomorrow - 
-    yesterday - 
-    next-week - 
-    last-week - 
-    epoch - UNIX epoch, (1970-01-01 00:00:00).
+Also, since it's based on my Unify package, it has support for self-updating.
 
 `
 )

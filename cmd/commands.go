@@ -3,14 +3,14 @@ package cmd
 import (
 	"GoWhen/cmd/cal"
 	"GoWhen/defaults"
-	"github.com/MickMake/GoUnify"
 	"github.com/MickMake/GoUnify/Only"
+	"github.com/MickMake/GoUnify/Unify"
 	"github.com/spf13/cobra"
 )
 
 
 type Cmds struct {
-	Unify    *GoUnify.Unify
+	Unify    *Unify.Unify
 	Google   *CmdGoogle
 	Parse    *CmdParse
 	Add      *CmdAdd
@@ -42,19 +42,19 @@ var cmds Cmds
 
 func init() {
 	for range Only.Once {
-		cmds.Unify = GoUnify.New(
-			GoUnify.Options{
+		cmds.Unify = Unify.New(
+			Unify.Options{
 				Description:   defaults.Description,
 				BinaryName:    defaults.BinaryName,
 				BinaryVersion: defaults.BinaryVersion,
 				SourceRepo:    defaults.SourceRepo,
 				BinaryRepo:    defaults.BinaryRepo,
 				EnvPrefix:     defaults.EnvPrefix,
-				HelpTemplate:  defaults.HelpTemplate,
+				HelpSummary:  defaults.HelpSummary,
 				ReadMe:        defaults.Readme,
 				Examples:      defaults.Examples,
 			},
-			GoUnify.Flags{},
+			Unify.Flags{},
 		)
 
 		cmdRoot := cmds.Unify.GetCmd()
