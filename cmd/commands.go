@@ -50,7 +50,7 @@ func init() {
 				SourceRepo:    defaults.SourceRepo,
 				BinaryRepo:    defaults.BinaryRepo,
 				EnvPrefix:     defaults.EnvPrefix,
-				HelpSummary:  defaults.HelpSummary,
+				HelpSummary:   defaults.HelpSummary,
 				ReadMe:        defaults.Readme,
 				Examples:      defaults.Examples,
 			},

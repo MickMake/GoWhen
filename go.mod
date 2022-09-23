@@ -2,10 +2,10 @@ module GoWhen
 
 go 1.18
 
-replace github.com/MickMake/GoUnify => ../../GoUnify
+// replace github.com/MickMake/GoUnify => ../../GoUnify
+replace github.com/MickMake/GoUnify v0.0.0-00010101000000-000000000000 => github.com/MickMake/GoUnify latest
 
 require (
-	github.com/MickMake/GoUnify v0.0.0-00010101000000-000000000000
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/jinzhu/now v1.1.5
 	github.com/olekukonko/tablewriter v0.0.5
@@ -14,6 +14,8 @@ require (
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
 	google.golang.org/api v0.84.0
 )
+
+require github.com/MickMake/GoUnify v0.0.0-20220923003712-7947811c121d
 
 require (
 	cloud.google.com/go/compute v1.7.0 // indirect
