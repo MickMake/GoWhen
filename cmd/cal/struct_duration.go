@@ -1,11 +1,12 @@
 package cal
 
 import (
-	"github.com/MickMake/GoUnify/Only"
 	"errors"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/MickMake/GoUnify/Only"
 )
 
 
@@ -94,7 +95,10 @@ func ParseDuration(s string) (Duration, error) {
 
 				default:
 					err = errors.New("time: invalid duration " + ds)
-					break
+			}
+
+			if err != nil {
+				break
 			}
 		}
 	}
