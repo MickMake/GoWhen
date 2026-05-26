@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/MickMake/GoUnify/Only"
-	"GoWhen/cmd"
 	"fmt"
 	"os"
-)
 
+	"github.com/MickMake/GoUnify/Only"
+	"GoWhen/cmd"
+)
 
 func main() {
 	var err error
@@ -20,5 +20,6 @@ func main() {
 
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
+		os.Exit(1)
 	}
 }
