@@ -38,7 +38,7 @@ func (cs *Cmds) ExecutePipedStdin() error {
 		}
 
 		if len(args) == 0 {
-			cs.Data.Print()
+			cs.FilteredPrint()
 			continue
 		}
 
@@ -73,4 +73,5 @@ func (cs *Cmds) ResetPipelineState() {
 		CppFormat:  cppFormat,
 		JavaFormat: javaFormat,
 	}
+	cs.Data.ClearSelectors()
 }
