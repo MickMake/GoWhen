@@ -176,7 +176,7 @@ func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "range <format> <to date/time>",
+			Use:                   "range <format> <to date/time> <duration>",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Range"},
 			Short:                 "Produce a range of dates.",
@@ -185,7 +185,7 @@ func (w *CmdRange) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
 			RunE:                  cmds.CmdRange,
-			Args:                  cobra.MinimumNArgs(2),
+			Args:                  cobra.MinimumNArgs(3),
 		}
 		cmd.AddCommand(w.SelfCmd)
 		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd,
