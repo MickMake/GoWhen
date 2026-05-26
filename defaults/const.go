@@ -13,6 +13,9 @@ var Readme string
 //go:embed EXAMPLES.md
 var Examples string
 
+//go:embed FILTERS.md
+var Filters string
+
 const (
 	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
 	BinaryName    = "GoWhen"
