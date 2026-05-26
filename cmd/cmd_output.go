@@ -329,8 +329,8 @@ func (w *CmdIs) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Use:                   "weekend",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Is"},
-			Short:                 "Is date a weekday?",
-			Long:                  "Is date a weekday?",
+			Short:                 "Is date a weekend?",
+			Long:                  "Is date a weekend?",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -490,13 +490,12 @@ func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		cs.Data.ConvertFormat(arg[0])
-		t, err := cs.Data.ParseDateString(cs.Data.Format, arg[1])
+		yes, err := cs.Data.IsDateBefore(arg[0], arg[1])
 		if err != nil {
 			cs.Error = err
 			break
 		}
-		if cs.Data.FromDate.Time.Before(t) {
+		if yes {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
@@ -520,13 +519,12 @@ func (cs *Cmds) CmdIsAfter(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		cs.Data.ConvertFormat(arg[0])
-		t, err := cs.Data.ParseDateString(cs.Data.Format, arg[1])
+		yes, err := cs.Data.IsDateAfter(arg[0], arg[1])
 		if err != nil {
 			cs.Error = err
 			break
 		}
-		if cs.Data.FromDate.Time.After(t) {
+		if yes {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
