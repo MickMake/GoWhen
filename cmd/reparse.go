@@ -20,7 +20,7 @@ const (
 func (cs *Cmds) LastPrint() {
 	for range Only.Once {
 		if cs.last {
-			cs.Data.Print()
+			cs.FilteredPrint()
 			break
 		}
 	}
