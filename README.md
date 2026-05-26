@@ -8,6 +8,8 @@ This tool does several things:
 - timezone - Convert between timezones.
 - round - Rounding of date/time.
 - format - Print date/time in a user selectable format.
+- keep - Keep output only when the working date matches a selector.
+- drop - Drop output when the working date matches a selector.
 - is dst - Is date/time within DST or not.
 - is leap - Is date/time a leap-year or not.
 - is weekend - Is date/time a weekend or not.
@@ -17,6 +19,7 @@ This tool does several things:
 - diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats.
 - range - Produce a range of dates with variable duration span between.
+- Automatically process piped stdin, one working date per input line.
 - Support for more parse formats, (Java and C), using a simple JSON mapping file.
 - Can run as an interactive shell.
 
@@ -32,6 +35,10 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 ### Date input
 	% GoWhen parse <format> <date/time>
 
+When stdin is piped, each non-empty line is automatically parsed as the working date before the command chain runs.
+
+	% cat dates.txt | GoWhen format 2006-01-02
+
 ### Date modify
 	% GoWhen add <duration>
 
@@ -40,6 +47,10 @@ Note: all commands are stackable. Except `format` and `is` - doesn't make any se
 
 	% GoWhen round up <duration>
 	% GoWhen round down <duration>
+
+### Date filters
+	% GoWhen keep <selector>
+	% GoWhen drop <selector>
 
 ### Output
 	% GoWhen format <format | cal-year | cal-month | cal-week | .>
@@ -125,6 +136,19 @@ Produce a list of files with names based on `%Y%m%d_%H%M%S-webcam.jpg` from `01 
     19670806_094242-webcam.jpg
     19670806_214242-webcam.jpg
 
+Keep only Mondays from a generated range.
+
+    % GoWhen parse . 2026-01-01 range . 2026-02-01 1d keep monday
+    2026-01-05T00:00:00Z
+    2026-01-12T00:00:00Z
+    2026-01-19T00:00:00Z
+    2026-01-26T00:00:00Z
+
+Drop weekends from piped input and format the remaining dates.
+
+    % printf '%s\n' 2026-05-30 2026-05-31 2026-06-01 | GoWhen drop weekend format 2006-01-02
+    2026-06-01
+
 
 ## Further Examples
 [EXAMPLES](https://github.com/MickMake/GoWhen/blob/master/EXAMPLES.md)
@@ -158,7 +182,7 @@ Produce a list of files with names based on `%Y%m%d_%H%M%S-webcam.jpg` from `01 
     cal-year    = Produce a full year calendar.
 
 ### Additional parse formats
-	.			= Best guess input string.
+	.            = Best guess input string.
 
 ### Add/round durations
 	ns - Nanosecond
@@ -182,6 +206,26 @@ Special date entry strings.
     yesterday   = 
     last-week   = 
     next-week   = 
+
+### Selectors
+Selectors are used by `keep` and `drop`.
+
+    weekday
+    weekend
+    mon | monday
+    tue | tuesday
+    wed | wednesday
+    thu | thursday
+    fri | friday
+    sat | saturday
+    sun | sunday
+
+Examples:
+
+    % GoWhen keep weekday
+    % GoWhen drop weekend
+    % GoWhen parse . 2026-01-01 range . 2026-02-01 1d keep mon
+    % cat dates.txt | GoWhen drop saturday format 2006-01-02
 
 
 ## Date/time format conversion
