@@ -101,6 +101,11 @@ func Execute() error {
 	var err error
 
 	for range Only.Once {
+		err = cmds.AttachStoredAliases(cmds.Unify.GetCmd())
+		if err != nil {
+			break
+		}
+
 		if cmds.HasPipedStdin() {
 			err = cmds.ExecutePipedStdin()
 			break
