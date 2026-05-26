@@ -325,40 +325,40 @@ func (d *Data) IsDateDST() bool {
 	return d.FromDate.Time.IsDST()
 }
 
-func (d *Data) IsDateBefore(format string, timeStr string) bool {
+func (d *Data) IsDateBefore(format string, timeStr string) (bool, error) {
 	var yes bool
+	var err error
+
 	for range Only.Once {
 		d.ConvertFormat(format)
 
-		t, err := d.ParseDateString(d.Format, timeStr)
+		var t time.Time
+		t, err = d.ParseDateString(d.Format, timeStr)
 		if err != nil {
 			break
 		}
-		if d.FromDate.Time.Before(t) {
-			yes = true
-			break
-		}
-		yes = false
+		yes = d.FromDate.Time.Before(t)
 	}
-	return yes
+
+	return yes, err
 }
 
-func (d *Data) IsDateAfter(format string, timeStr string) bool {
+func (d *Data) IsDateAfter(format string, timeStr string) (bool, error) {
 	var yes bool
+	var err error
+
 	for range Only.Once {
 		d.ConvertFormat(format)
 
-		t, err := d.ParseDateString(d.Format, timeStr)
+		var t time.Time
+		t, err = d.ParseDateString(d.Format, timeStr)
 		if err != nil {
 			break
 		}
-		if d.FromDate.Time.After(t) {
-			yes = true
-			break
-		}
-		yes = false
+		yes = d.FromDate.Time.After(t)
 	}
-	return yes
+
+	return yes, err
 }
 
 func (d *Data) Clear() {
