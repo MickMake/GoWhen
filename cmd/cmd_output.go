@@ -490,7 +490,13 @@ func (cs *Cmds) CmdIsBefore(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		if cs.Data.IsDateBefore(arg[0], arg[1]) {
+		cs.Data.ConvertFormat(arg[0])
+		t, err := cs.Data.ParseDateString(cs.Data.Format, arg[1])
+		if err != nil {
+			cs.Error = err
+			break
+		}
+		if cs.Data.FromDate.Time.Before(t) {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
@@ -514,7 +520,13 @@ func (cs *Cmds) CmdIsAfter(cmd *cobra.Command, args []string) error {
 		// ######################################## //
 
 
-		if cs.Data.IsDateAfter(arg[0], arg[1]) {
+		cs.Data.ConvertFormat(arg[0])
+		t, err := cs.Data.ParseDateString(cs.Data.Format, arg[1])
+		if err != nil {
+			cs.Error = err
+			break
+		}
+		if cs.Data.FromDate.Time.After(t) {
 			fmt.Println(True)
 		} else {
 			fmt.Println(False)
