@@ -1,14 +1,14 @@
 package cal
 
 import (
-	"github.com/MickMake/GoUnify/Only"
 	"errors"
 	"fmt"
-	"github.com/araddon/dateparse"
 	"strings"
 	"time"
-)
 
+	"github.com/MickMake/GoUnify/Only"
+	"github.com/araddon/dateparse"
+)
 
 type Diff struct {
 	Year   int
@@ -52,10 +52,9 @@ func (d *Diff) String() string {
 	return s
 }
 
-
 type Data struct {
-	Command    string
-	Format     string
+	Command string
+	Format  string
 
 	Convert    *Convert
 	JavaFormat bool
@@ -87,6 +86,8 @@ func (d *Data) ConvertFormat(format string) {
 			d.Format = d.Convert.FromCpp(format)
 			break
 		}
+
+		d.Format = format
 	}
 }
 
@@ -129,7 +130,6 @@ func (d *Data) DateParse(format string, timeStr string) error {
 	return err
 }
 
-
 func (d *Data) DateTruncate(duration string) error {
 	var err error
 	for range Only.Once {
@@ -138,8 +138,8 @@ func (d *Data) DateTruncate(duration string) error {
 		if err != nil {
 			break
 		}
-		dur.Time += time.Duration(dur.Months * 30 * 24) * time.Hour
-		dur.Time += time.Duration(dur.Years * 365 * 24) * time.Hour
+		dur.Time += time.Duration(dur.Months*30*24) * time.Hour
+		dur.Time += time.Duration(dur.Years*365*24) * time.Hour
 
 		t := *d.FromDate.Time
 		// Truncate and round only works in UTC.
@@ -171,8 +171,8 @@ func (d *Data) DateRound(duration string) error {
 		if err != nil {
 			break
 		}
-		dur.Time += time.Duration(dur.Months * 30 * 24) * time.Hour
-		dur.Time += time.Duration(dur.Years * 365 * 24) * time.Hour
+		dur.Time += time.Duration(dur.Months*30*24) * time.Hour
+		dur.Time += time.Duration(dur.Years*365*24) * time.Hour
 
 		t := *d.FromDate.Time
 		// Truncate and round only works in UTC.
@@ -237,7 +237,6 @@ func (d *Data) DateAdd(duration string) error {
 	return err
 }
 
-
 // DateRange - SetToDate
 func (d *Data) DateRange(format string, toStr string, duration string) error {
 	var err error
@@ -281,7 +280,6 @@ func (d *Data) DateDiff(format string, timeStr string) error {
 	return err
 }
 
-
 func (d *Data) IsDateNil() bool {
 	if d.FromDate.Time == nil {
 		return true
@@ -300,10 +298,10 @@ func (d *Data) IsDateWeekend() bool {
 		return false
 	}
 	switch d.FromDate.Time.Weekday() {
-		case time.Sunday:
-			return true
-		case time.Saturday:
-			return true
+	case time.Sunday:
+		return true
+	case time.Saturday:
+		return true
 	}
 	return false
 }
@@ -363,53 +361,12 @@ func (d *Data) IsDateAfter(format string, timeStr string) bool {
 	return yes
 }
 
-
-// func (d *Data) IsDate() bool {
-// 	if d.FromDate.Time != nil {
-// 		return true
-// 	}
-// 	return false
-// }
-//
-// func (d *Data) IsDiff() bool {
-// 	if d.Diff != nil {
-// 		return true
-// 	}
-// 	return false
-// }
-//
-// func (d *Data) IsDuration() bool {
-// 	if d.Duration != nil {
-// 		return true
-// 	}
-// 	return false
-// }
-
-
 func (d *Data) Clear() {
 	d.FromDate.Time = nil
 	d.ToDate.Time = nil
 	d.Diff = nil
 	d.Duration = nil
 }
-
-// func (d *Data) DateSet(t time.Time) {
-// 	d.Date.Time = &t
-// 	d.Duration = nil
-// 	d.Diff = nil
-// }
-//
-// func (d *Data) DiffSet(t Diff) {
-// 	d.Date.Time = nil
-// 	d.Duration = nil
-// 	d.Diff = &t
-// }
-//
-// func (d *Data) DurationSet(t time.Duration) {
-// 	d.Date.Time = nil
-// 	d.Duration = &t
-// 	d.Diff = nil
-// }
 
 func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error) {
 	var t time.Time
@@ -436,7 +393,7 @@ func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error)
 
 		// If we have defined a specific format.
 		if d.Format != "" {
-			t, err = time.Parse(format, timeStr)
+			t, err = time.Parse(d.Format, timeStr)
 			if err == nil {
 				break
 			}
@@ -445,7 +402,7 @@ func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error)
 		// See if we can auto-discover the format.
 		format, err = dateparse.ParseFormat(timeStr)
 		if err == nil {
-			d.Format = format	// Will be in GoLang layout format.
+			d.Format = format // Will be in GoLang layout format.
 			t, err = time.Parse(format, timeStr)
 			break
 		}
@@ -465,7 +422,6 @@ func (d *Data) ParseDateString(format string, timeStr string) (time.Time, error)
 
 	return t, err
 }
-
 
 func (d *Data) Print() {
 	for range Only.Once {
