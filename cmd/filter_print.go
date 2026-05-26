@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"GoWhen/cmd/cal"
 	"github.com/MickMake/GoUnify/Only"
 )
 
@@ -49,19 +50,19 @@ func (cs *Cmds) FilteredPrintTime(t time.Time) {
 		}
 
 		if cs.Data.Format == "list" || cs.Data.Format == "cal-week" {
-			m := calNew(t).Week()
+			m := cal.New(t).Week()
 			m.Print()
 			break
 		}
 
 		if cs.Data.Format == "cal-month" {
-			m := calNew(t).Month()
+			m := cal.New(t).Month()
 			m.Print()
 			break
 		}
 
 		if cs.Data.Format == "cal-year" {
-			y := calNew(t).Year()
+			y := cal.New(t).Year()
 			y.Print()
 			break
 		}
