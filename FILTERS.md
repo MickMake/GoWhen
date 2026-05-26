@@ -61,11 +61,19 @@ Output:
 
 ## Selectors
 
+Selector names are case-insensitive. Spaces, underscores, and hyphens are treated the same, so these are equivalent:
+
+```text
+month end
+month_end
+month-end
+```
+
 Current selectors are:
 
 ```text
-weekday
-weekend
+weekday | weekdays | workday | workdays | business-day | business-days
+weekend | weekends
 
 mon | monday
 tue | tuesday
@@ -74,6 +82,26 @@ thu | thursday
 fri | friday
 sat | saturday
 sun | sunday
+
+bom | month-start | month-begin
+eom | month-end
+boy | year-start | year-begin
+eoy | year-end
+quarter-start | quarter-begin
+quarter-end
+
+day-1 ... day-31
+
+first-mon ... first-sun
+first-monday ... first-sunday
+second-mon ... second-sun
+second-monday ... second-sunday
+third-mon ... third-sun
+third-monday ... third-sunday
+fourth-mon ... fourth-sun
+fourth-monday ... fourth-sunday
+last-mon ... last-sun
+last-monday ... last-sunday
 ```
 
 ## Examples
@@ -100,6 +128,30 @@ Drop Saturdays from a generated range:
 
 ```sh
 GoWhen parse . 2026-01-01 range . 2026-02-01 1d drop saturday
+```
+
+Keep month-end dates from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep "month end"
+```
+
+Keep quarter-end dates from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep "quarter end"
+```
+
+Keep the 15th day of each month from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep day-15
+```
+
+Keep the last Friday of each month from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep "last friday"
 ```
 
 Keep today only if today is a weekday:
