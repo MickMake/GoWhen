@@ -106,6 +106,11 @@ func Execute() error {
 	var err error
 
 	for range Only.Once {
+		if cmds.HasPipedStdin() {
+			err = cmds.ExecutePipedStdin()
+			break
+		}
+
 		// Execute adds all child commands to the root command and sets flags appropriately.
 		// This is called by main.main(). It only needs to happen once to the rootCmd.
 		err = cmds.Unify.Execute()
