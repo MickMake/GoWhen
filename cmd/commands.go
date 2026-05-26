@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
 type Cmds struct {
 	Unify    *Unify.Unify
 	Google   *CmdGoogle
@@ -23,10 +22,10 @@ type Cmds struct {
 	Convert  *CmdConvert
 	Alias    *CmdAlias
 
-	reparse  bool
-	last  bool
-	Data  cal.Data
-	Error error
+	reparse bool
+	last    bool
+	Data    cal.Data
+	Error   error
 }
 
 //goland:noinspection GoNameStartsWithPackageName
@@ -36,9 +35,7 @@ type CmdDefault struct {
 	SelfCmd *cobra.Command
 }
 
-
 var cmds Cmds
-
 
 func init() {
 	for range Only.Once {
@@ -89,16 +86,13 @@ func init() {
 		cmds.Alias = NewCmdAlias()
 		cmds.Alias.AttachCommand(cmdRoot)
 
+		AttachFilterCommands(cmdRoot)
 
 		cmds.Data.GoFormat = true
 		cmds.Data.CppFormat = false
 		cmds.Data.JavaFormat = false
 
-
 		cmds.AttachFlags(cmdRoot, cmds.Unify.GetViper())
-
-		// cmds.Google = NewCmdGoogle()
-		// cmds.Google.AttachCommands(cmdRoot)
 	}
 }
 
@@ -111,8 +105,6 @@ func Execute() error {
 			break
 		}
 
-		// Execute adds all child commands to the root command and sets flags appropriately.
-		// This is called by main.main(). It only needs to happen once to the rootCmd.
 		err = cmds.Unify.Execute()
 		if err != nil {
 			break
