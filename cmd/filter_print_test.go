@@ -112,11 +112,11 @@ func TestPrintFormattedTimeNamedFormats(t *testing.T) {
 		format string
 		want   string
 	}{
-		{format: "epoch", want: "1787756645\n"},
-		{format: "unix", want: "1787756645\n"},
-		{format: "unix-ms", want: "1787756645123\n"},
-		{format: "unix-us", want: "1787756645123456\n"},
-		{format: "unix-ns", want: "1787756645123456789\n"},
+		{format: "epoch", want: "1779807845\n"},
+		{format: "unix", want: "1779807845\n"},
+		{format: "unix-ms", want: "1779807845123\n"},
+		{format: "unix-us", want: "1779807845123456\n"},
+		{format: "unix-ns", want: "1779807845123456789\n"},
 		{format: "iso", want: "2026-05-26T15:04:05Z\n"},
 		{format: "date", want: "2026-05-26\n"},
 		{format: "time", want: "15:04:05\n"},
@@ -143,8 +143,8 @@ func TestPrintFormattedTimeStructuredFormats(t *testing.T) {
 		format string
 		want   string
 	}{
-		{format: "csv", want: "date,epoch,weekday,year,month,day,week\n2026-05-26T15:04:05Z,1787756645,Tuesday,2026,5,26,22\n"},
-		{format: "tsv", want: "date\tepoch\tweekday\tyear\tmonth\tday\tweek\n2026-05-26T15:04:05Z\t1787756645\tTuesday\t2026\t5\t26\t22\n"},
+		{format: "csv", want: "date,epoch,weekday,year,month,day,week\n2026-05-26T15:04:05Z,1779807845,Tuesday,2026,5,26,22\n"},
+		{format: "tsv", want: "date\tepoch\tweekday\tyear\tmonth\tday\tweek\n2026-05-26T15:04:05Z\t1779807845\tTuesday\t2026\t5\t26\t22\n"},
 	}
 
 	for _, tt := range tests {
@@ -177,7 +177,7 @@ func TestPrintFormattedTimeJSONL(t *testing.T) {
 	if decoded["date"] != "2026-05-26T15:04:05Z" || decoded["weekday"] != "Tuesday" {
 		t.Fatalf("unexpected JSONL string fields: %#v", decoded)
 	}
-	if decoded["epoch"] != float64(1787756645) || decoded["year"] != float64(2026) || decoded["month"] != float64(5) || decoded["day"] != float64(26) || decoded["week"] != float64(22) {
+	if decoded["epoch"] != float64(1779807845) || decoded["year"] != float64(2026) || decoded["month"] != float64(5) || decoded["day"] != float64(26) || decoded["week"] != float64(22) {
 		t.Fatalf("unexpected JSONL numeric fields: %#v", decoded)
 	}
 }
