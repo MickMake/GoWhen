@@ -10,18 +10,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const filtersSectionHeading = "## Filters and piped stdin"
+
 func AttachFilterHelpCommand(cmd *cobra.Command) {
 	for range Only.Once {
 		if cmd == nil {
 			break
 		}
 
+		filters := filterHelpMarkdown()
 		cmdFilters := &cobra.Command{
 			Use:                   "filters",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Help"},
 			Short:                 "Filter and piped stdin help",
-			Long:                  defaults.Filters,
+			Long:                  filters,
 			DisableFlagParsing:    false,
 			DisableFlagsInUseLine: false,
 			RunE:                  CmdHelpFilters,
@@ -33,10 +36,25 @@ func AttachFilterHelpCommand(cmd *cobra.Command) {
 }
 
 func CmdHelpFilters(_ *cobra.Command, _ []string) error {
-	w := getDocWidth(defaults.Filters)
-	result := markdown.Render(defaults.Filters, w, 6)
+	filters := filterHelpMarkdown()
+	w := getDocWidth(filters)
+	result := markdown.Render(filters, w, 6)
 	fmt.Printf("%s", result)
 	return nil
+}
+
+func filterHelpMarkdown() string {
+	start := strings.Index(defaults.Readme, filtersSectionHeading)
+	if start == -1 {
+		return defaults.Readme
+	}
+
+	section := defaults.Readme[start:]
+	if next := strings.Index(section[len(filtersSectionHeading):], "\n## "); next != -1 {
+		section = section[:len(filtersSectionHeading)+next]
+	}
+
+	return strings.TrimSpace(section) + "\n"
 }
 
 func getDocWidth(text string) int {
