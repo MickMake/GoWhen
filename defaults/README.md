@@ -143,6 +143,7 @@ Produce a list of files with names based on `%Y%m%d_%H%M%S-webcam.jpg` from `01 
     19670804_094242-webcam.jpg
     19670804_214242-webcam.jpg
     19670805_094242-webcam.jpg
+    19670805_214242-webcam.jpg
     19670806_094242-webcam.jpg
 
 Keep only Mondays from a generated range.
@@ -500,10 +501,4 @@ Conversion table:
 ```
 +-----------+------------+----------------+-------------------------------+---------------------+
 |   FLAG    | SHORT FLAG |  ENVIRONMENT   |          DESCRIPTION          | VALUE (* = DEFAULT) |
-+-----------+------------+----------------+-------------------------------+---------------------+
-| --config  |            | GOWHEN_CONFIG  | GoWhen: config file.          |  *                  |
-| --debug   |            | GOWHEN_DEBUG   | GoWhen: Debug mode.           | false *             |
-| --quiet   |            | GOWHEN_QUIET   | GoWhen: Silence all messages. | false *             |
-| --timeout |            | GOWHEN_TIMEOUT | Web timeout.                  | 30s *               |
-+-----------+------------+----------------+-------------------------------+---------------------+
-```
++-----------+------------+----------------+---------------זה
