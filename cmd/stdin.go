@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"bufio"
+	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -21,9 +23,19 @@ func (cs *Cmds) ExecutePipedStdin() error {
 	var err error
 
 	args := os.Args[1:]
-	scanner := bufio.NewScanner(os.Stdin)
-	rootCmd := cs.Unify.GetCmd()
+	if len(args) < 3 || args[0] != "parse" {
+		return errors.New("parse must be the first command when reading piped stdin; use parse <format> - to read stdin")
+	}
 
+	rootCmd := cs.Unify.GetCmd()
+	if args[2] != "-" {
+		fmt.Fprintln(os.Stderr, "warning: piped stdin ignored because parse date argument is not '-' ")
+		cs.ResetPipelineState()
+		rootCmd.SetArgs(args)
+		return rootCmd.Execute()
+	}
+
+	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" {
@@ -31,18 +43,9 @@ func (cs *Cmds) ExecutePipedStdin() error {
 		}
 
 		cs.ResetPipelineState()
-
-		err = cs.Data.DateParse(".", line)
-		if err != nil {
-			break
-		}
-
-		if len(args) == 0 {
-			cs.FilteredPrint()
-			continue
-		}
-
-		rootCmd.SetArgs(args)
+		lineArgs := append([]string{}, args...)
+		lineArgs[2] = line
+		rootCmd.SetArgs(lineArgs)
 		err = rootCmd.Execute()
 		if err != nil {
 			break
@@ -65,6 +68,8 @@ func (cs *Cmds) ResetPipelineState() {
 
 	cs.reparse = false
 	cs.last = false
+	cs.parseRan = false
+	cs.formatNoHeaders = false
 	cs.Error = nil
 	cs.Data = cal.Data{
 		Convert:    convert,
