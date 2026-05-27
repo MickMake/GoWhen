@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"errors"
+
 	"github.com/MickMake/GoUnify/Only"
 	"github.com/MickMake/GoUnify/cmdExec"
 	"github.com/MickMake/GoUnify/cmdHelp"
@@ -38,7 +40,7 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Parse"},
 			Short:                 "Parse date or time.",
-			Long:                  "Parse date or time.",
+			Long:                  "Parse date or time. Use '-' as the date/time argument to consume piped stdin.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -50,6 +52,7 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 			"2006-01-02T15:04:05 now",
 			"RFC3339 .",
 			". .",
+			". -",
 			"epoch tomorrow",
 			"\"2006-01-02 15:04:05\" yesterday",
 			"UnixDate \"Sat Jul  1 09:42:42 UTC 1967\"",
@@ -67,16 +70,25 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 func (cs *Cmds) CmdParse(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
+		if cs.parseRan || cs.Data.FromDate.Time != nil {
+			cs.Error = errors.New("parse must be the first pipeline command")
+			break
+		}
+
 		var arg []string
 		arg, args = cmdExec.PopArgs(2, args)
 		// ######################################## //
 
+		if arg[1] == "-" {
+			cs.Error = errors.New("parse date argument '-' requires piped stdin")
+			break
+		}
 
 		cs.Error = cs.Data.DateParse(arg[0], arg[1])
 		if cs.Error != nil {
 			break
 		}
-
+		cs.parseRan = true
 
 		// ######################################## //
 		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
