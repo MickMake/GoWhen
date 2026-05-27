@@ -89,7 +89,6 @@ func init() {
 		cmds.Alias.AttachCommand(cmdRoot)
 
 		AttachFilterCommands(cmdRoot)
-		AttachFilterHelpCommand(cmdRoot)
 
 		cmds.Data.GoFormat = true
 		cmds.Data.CppFormat = false
