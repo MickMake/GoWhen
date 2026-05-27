@@ -59,7 +59,7 @@ func (cs *Cmds) FilteredPrintTime(t time.Time) {
 }
 
 func (cs *Cmds) PrintFormattedTime(t time.Time) {
-	cs.printFormattedTime(t, true)
+	cs.printFormattedTime(t, !cs.formatNoHeaders)
 }
 
 func (cs *Cmds) printFormattedTime(t time.Time, includeHeader bool) {
@@ -171,7 +171,7 @@ func (cs *Cmds) FilteredPrintRange() {
 			cs.Data.Format = time.RFC3339
 		}
 
-		includeHeader := true
+		includeHeader := !cs.formatNoHeaders
 		var lt time.Time
 		if cs.Data.ToDate.Time.Before(*cs.Data.FromDate.Time) {
 			for t := *cs.Data.FromDate.Time; t.After(*cs.Data.ToDate.Time); {
