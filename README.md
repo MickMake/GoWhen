@@ -1,4 +1,4 @@
-# GoWhen - CLI based Date/Time manipulation written in GoLang.
+# GoWhen - The ultimate Date/Time manipulation tool written in GoLang.
 
 This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
