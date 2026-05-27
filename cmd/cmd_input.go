@@ -70,7 +70,7 @@ func (w *CmdParse) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 func (cs *Cmds) CmdParse(cmd *cobra.Command, args []string) error {
 	for range Only.Once {
-		if cs.parseRan || cs.Data.FromDate.Time != nil {
+		if cs.parseRan || cs.Data.Command != "parse" {
 			cs.Error = errors.New("parse must be the first pipeline command")
 			break
 		}
