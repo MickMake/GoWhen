@@ -35,11 +35,11 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 
 		// ******************************************************************************** //
 		w.SelfCmd = &cobra.Command{
-			Use:                   "format <format>",
+			Use:                   "format <format> [headers|noheaders]",
 			Aliases:               []string{},
 			Annotations:           map[string]string{"group": "Format"},
 			Short:                 "Format date or time.",
-			Long:                  "Format date or time.",
+			Long:                  "Format date or time. This is a terminal pipeline command.",
 			DisableFlagParsing:    true,
 			DisableFlagsInUseLine: false,
 			PreRunE:               cmds.InitArgs,
@@ -50,6 +50,8 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 		w.SelfCmd.Example = cmdHelp.PrintExamples(w.SelfCmd,
 			"format \"2006-01-02T15:04:05\"",
 			"format \"Mon 02 Jan 15:04:05 2006\"",
+			"format csv noheaders",
+			"format tsv noheaders",
 			)
 
 	}
@@ -57,19 +59,42 @@ func (w *CmdFormat) AttachCommand(cmd *cobra.Command) *cobra.Command {
 	return w.SelfCmd
 }
 
-func (cs *Cmds) CmdFormat(cmd *cobra.Command, args []string) error {
+func (cs *Cmds) CmdFormat(_ *cobra.Command, args []string) error {
 	for range Only.Once {
 		var arg string
 		arg, args = cmdExec.PopArg(args)
 		// ######################################## //
 
-
 		cs.Data.ConvertFormat(arg)
+		cs.formatNoHeaders = false
+
+		if len(args) > 0 {
+			if len(args) != 1 {
+				cs.Error = fmt.Errorf("format must be the last pipeline command")
+				break
+			}
+
+			switch args[0] {
+			case "headers":
+				cs.formatNoHeaders = false
+			case "noheaders", "no-header", "no-headers":
+				if cs.Data.Format != "csv" && cs.Data.Format != "tsv" {
+					cs.Error = fmt.Errorf("format option %q is only valid with csv or tsv", args[0])
+					break
+				}
+				cs.formatNoHeaders = true
+			default:
+				cs.Error = fmt.Errorf("format must be the last pipeline command")
+				break
+			}
+		}
+		if cs.Error != nil {
+			break
+		}
+
 		cs.last = true
 
-
 		// ######################################## //
-		cs.last, cs.Error = cmdExec.ReparseArgs(cmd, args)
 		cs.LastPrint()
 	}
 

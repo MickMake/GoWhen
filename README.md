@@ -1,4 +1,4 @@
-# GoWhen - CLI based Date/Time manipulation written in GoLang.
+# GoWhen - The ultimate Date/Time manipulation tool written in GoLang.
 
 This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
@@ -10,6 +10,7 @@ This tool does several things:
 - format - Print date/time in a user selectable format.
 - keep - Keep output only when the working date matches a selector.
 - drop - Drop output when the working date matches a selector.
+- alias - Define reusable command aliases.
 - is dst - Is date/time within DST or not.
 - is leap - Is date/time a leap-year or not.
 - is weekend - Is date/time a weekend or not.
@@ -19,25 +20,18 @@ This tool does several things:
 - diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats.
 - range - Produce a range of dates with variable duration span between.
-- Automatically process piped stdin, one working date per input line.
+- Explicitly process piped stdin with `parse <format> -`, one working date per input line.
 - Support for more parse formats, (Java and C), using a simple JSON mapping file.
 - Can run as an interactive shell.
 
 Also, since it's based on my Unify package, it has support for self-updating.
 
-Planned enhancements:
-- Ability to define command aliases. EG: `epoch` = `parse . epoch` or `christmas` = `parse . now diff . "2022-12-25 00:00:00"`
-
-
 ## Command summary
-Note: all commands are stackable. Except `format` and `is` - doesn't make any sense to make them stackable.
+Note: commands are stackable, but `parse` and `format` have special pipeline positions. `parse` can only start a date pipeline. `format` can only end one.
 
 ### Date input
 	% GoWhen parse <format> <date/time>
-
-When stdin is piped, each non-empty line is automatically parsed as the working date before the command chain runs.
-
-	% cat dates.txt | GoWhen format 2006-01-02
+	% cat dates.txt | GoWhen parse <format> - <command> ...
 
 ### Date modify
 	% GoWhen add <duration>
@@ -52,8 +46,22 @@ When stdin is piped, each non-empty line is automatically parsed as the working 
 	% GoWhen keep <selector>
 	% GoWhen drop <selector>
 
+### Aliases
+	% GoWhen alias add <name> <cmd> ...
+	% GoWhen alias list
+	% GoWhen alias del <name>
+
+Aliases are saved to `aliases.json` under the GoWhen config directory and loaded before command execution.
+
+Examples:
+
+	% GoWhen alias add christmas parse . 2026-12-25
+	% GoWhen christmas format 2006-01-02
+	% GoWhen alias list
+	% GoWhen alias del christmas
+
 ### Output
-	% GoWhen format <format | cal-year | cal-month | cal-week | .>
+	% GoWhen format <format | cal-year | cal-month | cal-week | .> [headers|noheaders]
 
 	% GoWhen is dst
 	% GoWhen is leap
@@ -66,6 +74,98 @@ When stdin is piped, each non-empty line is automatically parsed as the working 
 
 	% GoWhen range <format> <to date/time> <duration>
 
+## Pipeline rules: parse and format
+
+Most GoWhen commands operate on the current pipeline working date and may print output when they finish. Two commands are special:
+
+- `parse` creates the initial working date for a pipeline.
+- `format` is an explicit final output command.
+
+This keeps command chains predictable: input first, transformations and filters in the middle, final formatting at the end. The tiny command goblin gets a map, and everyone has fewer surprises.
+
+### parse must start the date pipeline
+
+`parse` must be the first date pipeline command when it is used.
+
+Good:
+
+```sh
+GoWhen parse . 2026-01-01 add 1d format date
+```
+
+Bad:
+
+```sh
+GoWhen add 1d parse . 2026-01-01
+```
+
+This fails because a pipeline should not replace its input date halfway through execution.
+
+### Piped stdin must be explicit
+
+When stdin is piped, use `-` as the `parse` date/time argument to consume each input line.
+
+Good:
+
+```sh
+cat dates.txt | GoWhen parse . - add 1d format date
+```
+
+Good with an explicit input layout:
+
+```sh
+cat dates.txt | GoWhen parse 2006-01-02 - add 1d format date
+```
+
+Bad:
+
+```sh
+cat dates.txt | GoWhen add 1d format date
+```
+
+This fails because piped stdin is not implicitly parsed. Use `parse <format> -` so the input format is visible and deliberate.
+
+If stdin is piped but `parse` uses a normal date value, stdin is ignored and GoWhen prints a warning to stderr:
+
+```sh
+cat dates.txt | GoWhen parse . today add 1d format date
+```
+
+This runs once using `today`. It does not process each line from `dates.txt`.
+
+### format must end the pipeline
+
+`format` is optional, because commands can still print their own output. When `format` is used, it must be the last command in the pipeline.
+
+Good:
+
+```sh
+GoWhen parse . 2026-01-01 add 1d format date
+```
+
+Also good, because `format` is not required:
+
+```sh
+GoWhen parse . 2026-01-01 add 1d
+```
+
+Bad:
+
+```sh
+GoWhen parse . 2026-01-01 format date add 1d
+```
+
+This fails because formatting output before later transformations is ambiguous. `format` is the end of the assembly line, not a scenic detour.
+
+Structured formats can take simple output options:
+
+```sh
+GoWhen parse . 2026-01-01 format csv
+GoWhen parse . 2026-01-01 format csv noheaders
+GoWhen parse . 2026-01-01 format tsv noheaders
+```
+
+`csv` and `tsv` include headers by default. `noheaders` suppresses the header row.
 
 ## Quick start
 Impatient? OK, so am I. Here's some things you can do with `GoWhen`.
@@ -134,7 +234,6 @@ Produce a list of files with names based on `%Y%m%d_%H%M%S-webcam.jpg` from `01 
     19670805_094242-webcam.jpg
     19670805_214242-webcam.jpg
     19670806_094242-webcam.jpg
-    19670806_214242-webcam.jpg
 
 Keep only Mondays from a generated range.
 
@@ -146,9 +245,178 @@ Keep only Mondays from a generated range.
 
 Drop weekends from piped input and format the remaining dates.
 
-    % printf '%s\n' 2026-05-30 2026-05-31 2026-06-01 | GoWhen drop weekend format 2006-01-02
+    % printf '%s\n' 2026-05-30 2026-05-31 2026-06-01 | GoWhen parse . - drop weekend format 2006-01-02
     2026-06-01
 
+## Filters and piped stdin
+
+GoWhen can act as a shell filter. When stdin is piped, use `parse <format> -` to parse each non-empty input line as the working date before the rest of the command chain runs.
+
+```sh
+cat dates.txt | GoWhen parse . - format 2006-01-02
+```
+
+This is equivalent to running the command chain once for each line:
+
+```text
+parse . <stdin-line> format 2006-01-02
+```
+
+Commands still keep their normal argument rules. Piped stdin supplies the date/time value only when `parse` uses `-`; it does not fill missing command arguments.
+
+For example, this compares each input date against a fixed command-line date:
+
+```sh
+cat dates.txt | GoWhen parse . - diff . 2026-06-01
+```
+
+But this is still invalid, because `diff` requires both arguments:
+
+```sh
+cat dates.txt | GoWhen parse . - diff .
+```
+
+### keep and drop
+
+`keep` and `drop` filter output based on the current working date.
+
+```sh
+GoWhen keep <selector>
+GoWhen drop <selector>
+```
+
+`keep` prints only dates matching the selector.
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-02-01 1d keep monday
+```
+
+`drop` suppresses dates matching the selector.
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-02-01 1d drop weekend
+```
+
+They also work with piped input:
+
+```sh
+printf '%s\n' 2026-05-30 2026-05-31 2026-06-01 | GoWhen parse . - drop weekend format 2006-01-02
+```
+
+Output:
+
+```text
+2026-06-01
+```
+
+### Selectors
+
+Selector names are case-insensitive. Spaces, underscores, and hyphens are treated the same, so these are equivalent:
+
+```text
+month end
+month_end
+month-end
+```
+
+Current selectors are:
+
+```text
+weekday | weekdays | workday | workdays | business-day | business-days
+weekend | weekends
+
+mon | monday
+tue | tuesday
+wed | wednesday
+thu | thursday
+fri | friday
+sat | saturday
+sun | sunday
+
+bom | month-start | month-begin
+eom | month-end
+boy | year-start | year-begin
+eoy | year-end
+quarter-start | quarter-begin
+quarter-end
+
+day-1 ... day-31
+
+first-mon ... first-sun
+first-monday ... first-sunday
+second-mon ... second-sun
+second-monday ... second-sunday
+third-mon ... third-sun
+third-monday ... third-sunday
+fourth-mon ... fourth-sun
+fourth-monday ... fourth-sunday
+last-mon ... last-sun
+last-monday ... last-sunday
+```
+
+`business-day` and `business-days` currently mean Monday-Friday only. Public holidays are not considered.
+
+### Filter examples
+
+Keep weekdays from piped input:
+
+```sh
+cat dates.txt | GoWhen parse . - keep weekday format 2006-01-02
+```
+
+Drop weekends from piped input:
+
+```sh
+cat dates.txt | GoWhen parse . - drop weekend format 2006-01-02
+```
+
+Keep Mondays from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-02-01 1d keep mon
+```
+
+Drop Saturdays from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-02-01 1d drop saturday
+```
+
+Keep month-end dates from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep "month end"
+```
+
+Keep quarter-end dates from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep "quarter end"
+```
+
+Keep the 15th day of each month from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep day-15
+```
+
+Keep the last Friday of each month from a generated range:
+
+```sh
+GoWhen parse . 2026-01-01 range . 2026-12-31 1d keep "last friday"
+```
+
+Keep today only if today is a weekday:
+
+```sh
+GoWhen keep weekday
+```
+
+Drop today if today is a weekend:
+
+```sh
+GoWhen drop weekend
+```
 
 ## Further Examples
 [EXAMPLES](https://github.com/MickMake/GoWhen/blob/master/EXAMPLES.md)
@@ -176,6 +444,18 @@ Drop weekends from piped input and format the remaining dates.
 
 ### Additional print formats
     epoch       = Unix epoch
+    unix        = Unix epoch seconds
+    unix-ms     = Unix epoch milliseconds
+    unix-us     = Unix epoch microseconds
+    unix-ns     = Unix epoch nanoseconds
+    iso         = RFC3339 timestamp
+    date        = Date only: 2006-01-02
+    time        = Time only: 15:04:05
+    datetime    = Date and time: 2006-01-02 15:04:05
+    csv         = Structured CSV output. Headers are printed by default.
+    tsv         = Structured TSV output. Headers are printed by default.
+    jsonl       = Newline-delimited JSON output.
+    json1       = Alias for jsonl.
     week        = Week number of the year.
     cal-week    = Produce a week long calendar.
     cal-month   = Produce a monthly calendar.
@@ -206,27 +486,6 @@ Special date entry strings.
     yesterday   = 
     last-week   = 
     next-week   = 
-
-### Selectors
-Selectors are used by `keep` and `drop`.
-
-    weekday
-    weekend
-    mon | monday
-    tue | tuesday
-    wed | wednesday
-    thu | thursday
-    fri | friday
-    sat | saturday
-    sun | sunday
-
-Examples:
-
-    % GoWhen keep weekday
-    % GoWhen drop weekend
-    % GoWhen parse . 2026-01-01 range . 2026-02-01 1d keep mon
-    % cat dates.txt | GoWhen drop saturday format 2006-01-02
-
 
 ## Date/time format conversion
 This tool now supports date/time formats for various languages. It uses a simple JSON file to build up maps of conversion rules.

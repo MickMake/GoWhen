@@ -22,10 +22,12 @@ type Cmds struct {
 	Convert  *CmdConvert
 	Alias    *CmdAlias
 
-	reparse bool
-	last    bool
-	Data    cal.Data
-	Error   error
+	reparse         bool
+	last            bool
+	parseRan        bool
+	formatNoHeaders bool
+	Data            cal.Data
+	Error           error
 }
 
 //goland:noinspection GoNameStartsWithPackageName
@@ -87,7 +89,6 @@ func init() {
 		cmds.Alias.AttachCommand(cmdRoot)
 
 		AttachFilterCommands(cmdRoot)
-		AttachFilterHelpCommand(cmdRoot)
 
 		cmds.Data.GoFormat = true
 		cmds.Data.CppFormat = false

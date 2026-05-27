@@ -5,7 +5,6 @@ import _ "embed"
 // Need to execute `go generate -v -x defaults/const.go` OR `go generate -v -x ./...`
 //go:generate cp ../README.md README.md
 //go:generate cp ../EXAMPLES.md EXAMPLES.md
-//go:generate cp ../FILTERS.md FILTERS.md
 
 //go:embed README.md
 var Readme string
@@ -13,11 +12,8 @@ var Readme string
 //go:embed EXAMPLES.md
 var Examples string
 
-//go:embed FILTERS.md
-var Filters string
-
 const (
-	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
+	Description   = "GoWhen - The ultimate Date/Time manipulation tool written in GoLang"
 	BinaryName    = "GoWhen"
 	BinaryVersion = "1.1.0"
 	SourceRepo    = "github.com/MickMake/" + BinaryName
@@ -26,7 +22,7 @@ const (
 	EnvPrefix = "GOWHEN"
 
 	HelpSummary = `
-# GoWhen - CLI based Date/Time manipulation written in GoLang.
+# GoWhen - The ultimate Date/Time manipulation tool written in GoLang.
 
 This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
@@ -36,6 +32,9 @@ This tool does several things:
 - timezone - Convert between timezones.
 - round - Rounding of date/time.
 - format - Print date/time in a user selectable format.
+- keep - Keep output only when the working date matches a selector.
+- drop - Drop output when the working date matches a selector.
+- alias - Define reusable command aliases.
 - is dst - Is date/time within DST or not.
 - is leap - Is date/time a leap-year or not.
 - is weekend - Is date/time a weekend or not.
@@ -45,6 +44,7 @@ This tool does several things:
 - diff - Return date/time duration from a specified date/time.
 - cal - Produce a traditional calendar in multiple formats.
 - range - Produce a range of dates with variable duration span between.
+- Automatically process piped stdin, one working date per input line.
 - Support for more parse formats, (Java and C), using a simple JSON mapping file.
 - Can run as an interactive shell.
 

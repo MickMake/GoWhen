@@ -236,8 +236,24 @@ func StrToFormat(str string) string {
 		// Special cases.
 		case "epoch":
 			str = "epoch"
+		case "unix":
+			str = "unix"
+		case "unix-ms":
+			str = "unix-ms"
+		case "unix-us":
+			str = "unix-us"
+		case "unix-ns":
+			str = "unix-ns"
 		case "week":
 			str = "week"
+		case "iso":
+			str = "iso"
+		case "date":
+			str = "date"
+		case "time":
+			str = "time"
+		case "datetime":
+			str = "datetime"
 	}
 	return str
 }
