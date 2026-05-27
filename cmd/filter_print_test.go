@@ -105,6 +105,54 @@ func TestFilteredPrintTimeSuppressesNonMatchingDate(t *testing.T) {
 	}
 }
 
+func TestPrintFormattedTimeNamedFormats(t *testing.T) {
+	tm := time.Date(2026, time.May, 26, 15, 4, 5, 123456789, time.UTC)
+	tests := []struct {
+		format string
+		want   string
+	}{
+		{format: "epoch", want: "1787756645\n"},
+		{format: "unix", want: "1787756645\n"},
+		{format: "unix-ms", want: "1787756645123\n"},
+		{format: "unix-us", want: "1787756645123456\n"},
+		{format: "unix-ns", want: "1787756645123456789\n"},
+		{format: "iso", want: "2026-05-26T15:04:05Z\n"},
+		{format: "date", want: "2026-05-26\n"},
+		{format: "time", want: "15:04:05\n"},
+		{format: "datetime", want: "2026-05-26 15:04:05\n"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.format, func(t *testing.T) {
+			cs := Cmds{}
+			cs.Data.Format = tt.format
+			got := captureStdout(t, func() {
+				cs.PrintFormattedTime(tm)
+			})
+			if got != tt.want {
+				t.Fatalf("PrintFormattedTime(%q) = %q, want %q", tt.format, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestFilteredPrintRangeUsesNamedFormats(t *testing.T) {
+	cs := Cmds{}
+	cs.Data.ClearSelectors()
+	t.Cleanup(cs.Data.ClearSelectors)
+
+	cs.Data.Format = "date"
+	cs.Data.SetFromDate(time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC))
+	cs.Data.SetToDate(time.Date(2026, time.January, 3, 0, 0, 0, 0, time.UTC))
+	cs.Data.SetRange(cal.Duration{Time: 24 * time.Hour})
+
+	got := captureStdout(t, cs.FilteredPrintRange)
+	want := "2026-01-01\n2026-01-02\n"
+	if got != want {
+		t.Fatalf("FilteredPrintRange output = %q, want %q", got, want)
+	}
+}
+
 func captureStdout(t *testing.T, fn func()) string {
 	t.Helper()
 
