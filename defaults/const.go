@@ -13,7 +13,7 @@ var Readme string
 var Examples string
 
 const (
-	Description   = "GoWhen - CLI based Date/Time manipulation written in GoLang"
+	Description   = "GoWhen - The ultimate Date/Time manipulation tool written in GoLang"
 	BinaryName    = "GoWhen"
 	BinaryVersion = "1.1.0"
 	SourceRepo    = "github.com/MickMake/" + BinaryName
@@ -22,7 +22,7 @@ const (
 	EnvPrefix = "GOWHEN"
 
 	HelpSummary = `
-# GoWhen - CLI based Date/Time manipulation written in GoLang.
+# GoWhen - The ultimate Date/Time manipulation tool written in GoLang.
 
 This tool came about because I needed a cross-platform way of performing date and time manipulations within scripts.
 
