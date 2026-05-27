@@ -3,7 +3,7 @@ module GoWhen
 go 1.18
 
 // replace github.com/MickMake/GoUnify => ../../GoUnify
-replace github.com/MickMake/GoUnify v0.0.0-00010101000000-000000000000 => github.com/MickMake/GoUnify latest
+replace github.com/MickMake/GoUnify v0.0.0-00010101000000-000000000000 => github.com/MickMake/GoUnify v1.0.2
 
 require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
